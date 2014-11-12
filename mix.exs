@@ -5,7 +5,10 @@ defmodule ExFSWatch.Mixfile do
     [ app: :exfswatch,
       version: "0.0.1",
       elixir: "~> 1.0",
-      deps: deps
+      deps: deps,
+      description: "A file change monitor based on [fswatch](https://github.com/emcrisostomo/fswatch)",
+      source_url: "https://github.com/falood/exfswatch",
+      package: package,
     ]
   end
 
@@ -17,5 +20,11 @@ defmodule ExFSWatch.Mixfile do
 
   defp deps do
     []
+  end
+
+  defp package do
+    %{ licenses: ["BSD 3-Clause"],
+       links: %{"Github" => "https://github.com/falood/exfswatch"}
+     }
   end
 end
