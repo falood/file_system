@@ -1,11 +1,18 @@
 ExFSWatch
 =========
 
-Elixir version of fswatch base on [fswatch](https://github.com/emcrisostomo/fswatch)
+A file change watcher wrapper based on [fs](https://github.com/synrc/fs)
 
-C_drive version is developing.
+## System Support
+
+- Mac fsevent
+- Linux inotify (untested)
+- Windows inotify-win (untested)
+
+NOTE: On Linux you need to install inotify-tools.
 
 ## Usage
+
 ```elixir
 defmodule Monitor do
   use ExFSWatch, dirs: ["/tmp/fswatch"]
@@ -23,3 +30,14 @@ end
 ```shell
 iex > Monitor.start
 ```
+
+## List Events from Backend
+
+```shell
+iex > ExFSWatch.known_events
+```
+
+## TODO
+
+- [ ] GenEvent mode
+- [ ] Unit Testing
