@@ -50,7 +50,7 @@ defmodule MyModule.Monitor do
     IO.puts "STOP"
   end
 
-  def callback(file_path, events) do
+  def callback(file_path, _events) do
     file_path
     |> Path.relative_to_cwd
     |> reloading
@@ -62,6 +62,7 @@ defmodule MyModule.Monitor do
     IO.puts("Reloading #{path}")
     path
   end
+end
 ```
 
 In `lib/my_module.ex` of `MyModule` project:
@@ -74,11 +75,10 @@ defmodule MyModule do
       :dev ->
         MyModule.Monitor.start
         IO.puts "Starting ExFSWatch Live Reload..."
-      :prod ->
-        IO.puts "ExFSWatch Live Reload Disabled in Production"
-      :test ->
-        IO.puts "ExFSWatch Live Reload Disabled in Testing"
+      _ ->
+        IO.puts "ExFSWatch Live Reload Disabled"
     end
+    {:ok, self()}
   end
 
 end
