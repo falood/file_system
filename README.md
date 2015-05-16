@@ -15,6 +15,8 @@ NOTE: On Linux you need to install inotify-tools.
 
 ## Usage
 
+#### Simple Example
+
 ```elixir
 defmodule Monitor do
   use ExFSWatch, dirs: ["/tmp/fswatch"]
@@ -32,6 +34,73 @@ end
 ```shell
 iex > Monitor.start
 ```
+
+#### Live Reload Example
+
+In `lib/monitor.ex` of `MyModule` project:
+
+```elixir
+defmodule MyModule.Monitor do
+
+  use ExFSWatch, dirs: ["#{System.cwd!}/lib"]
+
+  def callback(:stop) do
+    IO.puts "STOP"
+  end
+
+  def callback(file_path, events) do
+    file_path
+    |> Path.relative_to_cwd
+    |> reloading
+    |> File.read!
+    |> Code.compile_string
+  end
+
+  def reloading(path) do
+    IO.puts("Reloading #{path}")
+    path
+  end
+```
+
+In `lib/my_module.ex` of `MyModule` project:
+
+```elixir
+defmodule MyModule do
+
+  def start(_type, _opts) do
+    case Mix.env do
+      :dev ->
+        MyModule.Monitor.start
+        IO.puts "Starting ExFSWatch Live Reload..."
+      :prod ->
+        IO.puts "ExFSWatch Live Reload Disabled in Production"
+      :test ->
+        IO.puts "ExFSWatch Live Reload Disabled in Testing"
+    end
+  end
+
+end
+```
+
+In `mix.exs` of `MyModule` project:
+
+```elixir
+
+  def application do
+    [
+      applications: [:logger, :exfswatch],
+      mod: {MyModule, []}
+    ]
+  end
+
+  defp deps do
+    [
+      exfswatch: "0.0.2",
+    ]
+  end
+
+```
+
 
 ## List Events from Backend
 
