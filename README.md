@@ -37,6 +37,8 @@ iex > Monitor.start
 
 #### Live Reload Example
 
+
+
 In `lib/monitor.ex` of `MyModule` project:
 
 ```elixir
@@ -101,6 +103,11 @@ In `mix.exs` of `MyModule` project:
 
 ```
 
+To use the live reload/code hotswap run
+
+```shell
+$ iex -S mix
+```
 
 ## List Events from Backend
 
