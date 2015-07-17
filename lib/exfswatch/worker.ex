@@ -44,10 +44,10 @@ defmodule ExFSWatch.Worker do
               [:stream, :exit_status, {:line, 16384}, {:args, args}, {:cd, System.tmp_dir!}]
     )
   end
-  defp start_port(:"notifywait_win32", path) do
+  defp start_port(:"inotifywait_win32", path) do
     path = path |> format_path
     args = ['-m', '-r' | path]
-    Port.open({:spawn_executable, :"notifywait_win32".find_executable()},
+    Port.open({:spawn_executable, :"inotifywait_win32".find_executable()},
               [:stream, :exit_status, {:line, 16384}, {:args, args}, {:cd, System.tmp_dir!}]
     )
   end

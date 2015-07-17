@@ -11,7 +11,7 @@ defmodule ExFSWatch do
   @backend (case :os.type() do
     {:unix,    :darwin} -> :fsevents
     {:unix,    :linux}  -> :inotifywait
-    {:"win32", :nt}     -> :"notifywait_win32"
+    {:"win32", :nt}     -> :"inotifywait_win32"
      _                  -> nil
   end)
 
