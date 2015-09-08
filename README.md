@@ -15,6 +15,31 @@ NOTE: On Linux you need to install inotify-tools.
 
 ## Usage
 
+Put `exfswatch` in the `deps` and `application` part of your mix.exs
+
+``` elixir
+defmodule Excellent.Mixfile do
+  use Mix.Project
+
+  def project do
+  ...
+  end
+
+  def application do
+    [applications: [:exfswatch, :logger]]
+  end
+
+  defp deps do
+    [
+      { :exfswatch, "~> 0.1.0", only: :test },
+    ]
+  end
+  ...
+end
+```
+
+write `lib/monitor.ex`
+
 ```elixir
 defmodule Monitor do
   use ExFSWatch, dirs: ["/tmp/fswatch"]
@@ -28,6 +53,8 @@ defmodule Monitor do
   end
 end
 ```
+
+Execute in iex
 
 ```shell
 iex > Monitor.start
