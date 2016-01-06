@@ -11,6 +11,6 @@ defmodule ExFSWatch.Supervisor do
 
   def init([]) do
     [ worker(ExFSWatch.Worker, [], [restart: :transient])
-    ] |> supervise [strategy: :simple_one_for_one]
+    ] |> supervise(strategy: :simple_one_for_one)
   end
 end
