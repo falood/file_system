@@ -14,7 +14,7 @@ defmodule ExFSWatch.Worker do
   end
 
   def handle_info({port, {:data, {:eol, line}}}, %__MODULE__{port: port, backend: backend, module: module}=sd) do
-    {file_path, events} = backend.line_to_event(line)
+    {file_path, events} = backend(backend).line_to_event(to_string line)
     module.callback(file_path |> to_string, events)
     {:noreply, sd}
   end
@@ -38,7 +38,8 @@ defmodule ExFSWatch.Worker do
   defp start_port(:inotifywait, path) do
     path = path |> format_path
     args = [ '-c', 'inotifywait $0 $@ & PID=$!; read a; kill $PID',
-             '-m', '-e', 'close_write', '-e', 'moved_to', '-e', 'create', '-r' | path
+             '-m', '-e', 'close_write', '-e', 'moved_to', '-e', 'create', '-e',
+             'delete_self', '-e', 'delete', '-r' | path
            ]
     Port.open({:spawn_executable, :os.find_executable('sh')},
               [:stream, :exit_status, {:line, 16384}, {:args, args}, {:cd, System.tmp_dir!}]
@@ -60,4 +61,7 @@ defmodule ExFSWatch.Worker do
   defp format_path(path) do
     [path] |> format_path
   end
+
+  defp backend(:inotifywait), do: ExFSWatch.Sys.InotifyWait
+  defp backend(be), do: be
 end
