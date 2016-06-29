@@ -3,7 +3,7 @@ defmodule ExFSWatch.Mixfile do
 
   def project do
     [ app: :exfswatch,
-      version: "0.1.1",
+      version: "0.2.0-dev",
       elixir: "~> 1.0",
       deps: deps,
       description: "A file change watcher wrapper based on [fs](https://github.com/synrc/fs)",
@@ -19,7 +19,7 @@ defmodule ExFSWatch.Mixfile do
   end
 
   defp deps do
-    [ {:fs, "~> 0.9"} ]
+    [ {:fs, github: "synrc/fs", tag: "1.9"} ]
   end
 
   defp package do
