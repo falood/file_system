@@ -14,7 +14,7 @@ defmodule ExFSWatch.Worker do
   end
 
   def handle_info({port, {:data, {:eol, line}}}, %__MODULE__{port: port, backend: backend, module: module}=sd) do
-    {file_path, events} = backend(backend).line_to_event(to_string line)
+    {file_path, events} = backend(backend).line_to_event(line)
     module.callback(file_path |> to_string, events)
     {:noreply, sd}
   end
