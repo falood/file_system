@@ -2,6 +2,7 @@ defmodule ExFSWatch.Sys.InotifyWait do
 
   def line_to_event(line) do
     line
+    |> to_string
     |> scan1
     |> scan2(line)
   end
