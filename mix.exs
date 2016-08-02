@@ -19,7 +19,7 @@ defmodule ExFSWatch.Mixfile do
   end
 
   defp deps do
-    [ {:fs, github: "synrc/fs", tag: "1.9"} ]
+    [ {:fs, "~> 0.9"} ]
   end
 
   defp package do
