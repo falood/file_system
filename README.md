@@ -60,6 +60,18 @@ Execute in iex
 iex > Monitor.start
 ```
 
+## Tweaking behaviour via listener extra arguments
+
+For each platform, you can pass extra arguments to the underlying listener process via the `listener_extra_args` option.
+
+Here is an example to get instant notifications on file changes for Mac OS X:
+
+```elixir
+use ExFSWatch, dirs: ["/tmp/fswatch"], listener_extra_args: "--latency=0.0"
+```
+
+See the [fs source](https://github.com/synrc/fs/tree/master/c_src) for more details.
+
 ## List Events from Backend
 
 ```shell

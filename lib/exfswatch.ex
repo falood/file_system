@@ -1,9 +1,10 @@
 require Logger
 
 defmodule ExFSWatch do
-  defmacro __using__([dirs: dirs]) do
+  defmacro __using__(options) do
     quote do
-      def __dirs__, do: unquote(dirs)
+      def __dirs__, do: unquote(Keyword.fetch!(options, :dirs))
+      def __listener_extra_args__, do: unquote(Keyword.get(options, :listener_extra_args, ''))
       def start,    do: ExFSWatch.Supervisor.start_child __MODULE__
     end
   end
