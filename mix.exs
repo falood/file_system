@@ -3,7 +3,7 @@ defmodule ExFSWatch.Mixfile do
 
   def project do
     [ app: :exfswatch,
-      version: "0.2.1",
+      version: "0.3.0",
       elixir: "~> 1.0",
       deps: deps(),
       description: "A file change watcher wrapper based on [fs](https://github.com/synrc/fs)",
@@ -29,7 +29,8 @@ defmodule ExFSWatch.Mixfile do
   end
 
   defp package do
-    %{ licenses: ["BSD 3-Clause"],
+    %{ maintainers: ["Xiangrong Hao"],
+       licenses: ["WTFPL"],
        links: %{"Github" => "https://github.com/falood/exfswatch"}
      }
   end
