@@ -9,6 +9,10 @@ defmodule ExFSWatch.Mixfile do
       description: "A file change watcher wrapper based on [fs](https://github.com/synrc/fs)",
       source_url: "https://github.com/falood/exfswatch",
       package: package,
+      docs: [
+        extras: ["README.md"],
+        main: "readme",
+      ]
     ]
   end
 
@@ -19,7 +23,9 @@ defmodule ExFSWatch.Mixfile do
   end
 
   defp deps do
-    [ {:fs, "~> 2.12" } ]
+    [ { :fs,     "~> 2.12" },
+      { :ex_doc, "~> 0.14", only: :docs },
+    ]
   end
 
   defp package do
