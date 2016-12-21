@@ -19,7 +19,7 @@ defmodule ExFSWatch.Mixfile do
   end
 
   defp deps do
-    [ {:fs, "~> 0.9"} ]
+    [ {:fs, "~> 2.12" } ]
   end
 
   defp package do
