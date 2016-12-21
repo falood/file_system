@@ -17,16 +17,16 @@ defmodule ExFSWatch do
   end)
 
   def start(_, _) do
-    if os_supported? and port_found? do
+    if os_supported?() and port_found?() do
       ExFSWatch.Supervisor.start_link
     else
       Logger.error "ExFSWatch start failed"
-      if os_supported? do
+      if os_supported?() do
         Logger.error "backend port not found: #{@backend}"
       else
         Logger.error "fs does not support the current operating system"
       end
-      {:ok, self}
+      {:ok, self()}
     end
   end
 
@@ -35,11 +35,11 @@ defmodule ExFSWatch do
   end
 
   def port_found? do
-    @backend.find_executable
+    @backend.find_executable()
   end
 
   def known_events do
-    @backend.known_events
+    @backend.known_events()
   end
 
   def backend do

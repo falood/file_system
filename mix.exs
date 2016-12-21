@@ -5,10 +5,10 @@ defmodule ExFSWatch.Mixfile do
     [ app: :exfswatch,
       version: "0.2.1",
       elixir: "~> 1.0",
-      deps: deps,
+      deps: deps(),
       description: "A file change watcher wrapper based on [fs](https://github.com/synrc/fs)",
       source_url: "https://github.com/falood/exfswatch",
-      package: package,
+      package: package(),
       docs: [
         extras: ["README.md"],
         main: "readme",
