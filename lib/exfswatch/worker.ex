@@ -30,15 +30,15 @@ defmodule ExFSWatch.Worker do
 
 
   defp start_port(:fsevents, path, listener_extra_args) do
-    path = path |> format_path
-    args = [ listener_extra_args, '-F' | path]
+    path = path |> format_path |> IO.inspect
+    args = listener_extra_args ++ ['-F' | path] |> IO.inspect
     Port.open({:spawn_executable, :fsevents.find_executable()},
               [:stream, :exit_status, {:line, 16384}, {:args, args}, {:cd, System.tmp_dir!}]
     )
   end
   defp start_port(:inotifywait, path, listener_extra_args) do
     path = path |> format_path
-    args = [ listener_extra_args, '-c', 'inotifywait $0 $@ & PID=$!; read a; kill $PID',
+    args = listener_extra_args ++ ['-c', 'inotifywait $0 $@ & PID=$!; read a; kill $PID',
              '-m', '-e', 'close_write', '-e', 'moved_to', '-e', 'create', '-e',
              'delete_self', '-e', 'delete', '-r' | path
            ]
@@ -48,7 +48,7 @@ defmodule ExFSWatch.Worker do
   end
   defp start_port(:"inotifywait_win32", path, listener_extra_args) do
     path = path |> format_path
-    args = [ listener_extra_args, '-m', '-r' | path]
+    args = listener_extra_args ++ ['-m', '-r' | path]
     Port.open({:spawn_executable, :"inotifywait_win32".find_executable()},
               [:stream, :exit_status, {:line, 16384}, {:args, args}, {:cd, System.tmp_dir!}]
     )
