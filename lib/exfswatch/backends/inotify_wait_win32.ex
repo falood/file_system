@@ -6,7 +6,7 @@ defmodule ExFSWatch.Backends.InotifyWaitWin32 do
     :code.priv_dir(:exfswatch) ++ 'inotifywait.exe'
   end
 
-  defp start_port(path, listener_extra_args) do
+  def start_port(path, listener_extra_args) do
     path = path |> Utils.format_path()
     args = listener_extra_args ++ ['-m', '-r' | path]
     Port.open(

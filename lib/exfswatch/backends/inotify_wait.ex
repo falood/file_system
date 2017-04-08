@@ -1,7 +1,7 @@
 defmodule ExFSWatch.Backends.InotifyWait do
 
   def find_executable do
-    System.find_executable("sh") |> to_chatlist
+    System.find_executable("sh") |> to_charlist
   end
 
   def start_port(path, listener_extra_args) do
