@@ -15,7 +15,7 @@ defmodule ExFSWatch.Mixfile do
 
   def project do
     [ app: :exfswatch,
-      version: "0.4.0",
+      version: "0.4.1",
       elixir: "~> 1.0",
       compilers: [ :src, :elixir, :app ],
       deps: deps(),
