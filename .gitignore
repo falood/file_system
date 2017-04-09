@@ -5,3 +5,5 @@
 erl_crash.dump
 *.ez
 mix.lock
+/priv/mac_listener
+/priv/kqueue

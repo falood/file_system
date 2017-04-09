@@ -16,7 +16,7 @@ defmodule ExFSWatch.Mixfile do
 
   def project do
     [ app: :exfswatch,
-      version: "0.3.2",
+      version: "0.4.0",
       elixir: "~> 1.0",
       compilers: [ :src, :elixir, :app ],
       deps: deps(),
@@ -43,6 +43,7 @@ defmodule ExFSWatch.Mixfile do
 
   defp package do
     %{ maintainers: ["Xiangrong Hao"],
+       files: ["priv", "lib", "c_src", "README.md", "mix.exs"],
        licenses: ["WTFPL"],
        links: %{"Github" => "https://github.com/falood/exfswatch"}
      }
