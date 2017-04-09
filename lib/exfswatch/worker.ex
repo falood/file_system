@@ -9,12 +9,12 @@ defmodule ExFSWatch.Worker do
 
   def init(module) do
     backend = ExFSWatch.backend
-    port = start_port(backend, module.__dirs__, module.__listener_extra_args__)
+    port = backend.start_port(module.__dirs__, module.__listener_extra_args__)
     {:ok, %__MODULE__{port: port, backend: backend, module: module}}
   end
 
   def handle_info({port, {:data, {:eol, line}}}, %__MODULE__{port: port, backend: backend, module: module}=sd) do
-    {file_path, events} = backend(backend).line_to_event(line)
+    {file_path, events} = backend.line_to_event(line)
     module.callback(file_path |> to_string, events)
     {:noreply, sd}
   end
@@ -27,42 +27,4 @@ defmodule ExFSWatch.Worker do
   def handle_info(_, sd) do
     {:noreply, sd}
   end
-
-
-  defp start_port(:fsevents, path, listener_extra_args) do
-    path = path |> format_path |> IO.inspect
-    args = listener_extra_args ++ ['-F' | path] |> IO.inspect
-    Port.open({:spawn_executable, :fsevents.find_executable()},
-              [:stream, :exit_status, {:line, 16384}, {:args, args}, {:cd, System.tmp_dir!}]
-    )
-  end
-  defp start_port(:inotifywait, path, listener_extra_args) do
-    path = path |> format_path
-    args = listener_extra_args ++ ['-c', 'inotifywait $0 $@ & PID=$!; read a; kill $PID',
-             '-m', '-e', 'close_write', '-e', 'moved_to', '-e', 'create', '-e',
-             'delete_self', '-e', 'delete', '-r' | path
-           ]
-    Port.open({:spawn_executable, :os.find_executable('sh')},
-              [:stream, :exit_status, {:line, 16384}, {:args, args}, {:cd, System.tmp_dir!}]
-    )
-  end
-  defp start_port(:"inotifywait_win32", path, listener_extra_args) do
-    path = path |> format_path
-    args = listener_extra_args ++ ['-m', '-r' | path]
-    Port.open({:spawn_executable, :"inotifywait_win32".find_executable()},
-              [:stream, :exit_status, {:line, 16384}, {:args, args}, {:cd, System.tmp_dir!}]
-    )
-  end
-
-  defp format_path(path) when is_list(path) do
-    for i <- path do
-      i |> Path.absname |> to_char_list
-    end
-  end
-  defp format_path(path) do
-    [path] |> format_path
-  end
-
-  defp backend(:inotifywait), do: ExFSWatch.Sys.InotifyWait
-  defp backend(be), do: be
 end

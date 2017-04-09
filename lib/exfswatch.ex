@@ -18,10 +18,11 @@ defmodule ExFSWatch do
   end
 
   @backend (case :os.type() do
-    {:unix,    :darwin} -> :fsevents
-    {:unix,    :linux}  -> :inotifywait
-    {:"win32", :nt}     -> :"inotifywait_win32"
-     _                  -> nil
+    {:unix,  :darwin}  -> ExFSWatch.Backends.Fsevents
+    {:unix,  :freebsd} -> ExFSWatch.Backends.Kqueue
+    {:unix,  :linux}   -> ExFSWatch.Backends.InotifyWait
+    {:win32, :nt}      -> ExFSWatch.Backends.InotifyWaitWin32
+    _                  -> nil
   end)
 
   def start(_, _) do
