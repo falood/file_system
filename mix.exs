@@ -1,11 +1,10 @@
 defmodule Mix.Tasks.Compile.Src do
   def run(_) do
-    priv_dir = :code.priv_dir(:exfswatch)
     case :os.type() do
       {:unix, :darwin} ->
-        Mix.shell.cmd("clang -framework CoreFoundation -framework CoreServices -Wno-deprecated-declarations c_src/mac/*.c -o #{priv_dir}/mac_listener")
+        Mix.shell.cmd("clang -framework CoreFoundation -framework CoreServices -Wno-deprecated-declarations c_src/mac/*.c -o priv/mac_listener")
       {:unix, :freebsd} ->
-        Mix.shell.cmd("cc c_src/bsd/*.c -o #{priv_dir}/kqueue")
+        Mix.shell.cmd("cc c_src/bsd/*.c -o priv/kqueue")
       _ -> nil
     end
   end
@@ -43,7 +42,17 @@ defmodule ExFSWatch.Mixfile do
 
   defp package do
     %{ maintainers: ["Xiangrong Hao"],
-       files: ["priv", "lib", "c_src", "README.md", "mix.exs"],
+       files: [
+         "lib", "README.md", "mix.exs",
+         "c_src/bsd/main.c",
+         "c_src/mac/cli.c",
+         "c_src/mac/cli.h",
+         "c_src/mac/common.h",
+         "c_src/mac/compat.c",
+         "c_src/mac/compat.h",
+         "c_src/mac/main.c",
+         "priv/inotifywait.exe",
+       ],
        licenses: ["WTFPL"],
        links: %{"Github" => "https://github.com/falood/exfswatch"}
      }
