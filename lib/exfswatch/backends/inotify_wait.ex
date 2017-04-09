@@ -1,3 +1,5 @@
+alias ExFSWatch.Utils
+
 defmodule ExFSWatch.Backends.InotifyWait do
 
   def find_executable do
@@ -14,6 +16,10 @@ defmodule ExFSWatch.Backends.InotifyWait do
       {:spawn_executable, find_executable()},
       [:stream, :exit_status, {:line, 16384}, {:args, args}, {:cd, System.tmp_dir!()}]
     )
+  end
+
+  def known_events do
+    [:created, :deleted, :renamed, :closed, :modified, :isdir, :attribute, :undefined]
   end
 
   def line_to_event(line) do
@@ -47,14 +53,13 @@ defmodule ExFSWatch.Backends.InotifyWait do
     |> Enum.map(&(convert_flag &1))
   end
 
-  def convert_flag('CLOSE_WRITE'), do: :modified
-  def convert_flag('CLOSE'),       do: :closed
-  def convert_flag('CREATE'),      do: :create
-  def convert_flag('MOVED_TO'),    do: :renamed
-  def convert_flag('ISDIR'),       do: :isdir
-  def convert_flag('MODIFY'),      do: :modified
-  def convert_flag('DELETE_SELF'), do: :delete_self
-  def convert_flag('DELETE'),      do: :deleted
-
-  def convert_flag(_), do: :unknown
+  def convert_flag("CREATE"),      do: :created
+  def convert_flag("DELETE"),      do: :deleted
+  def convert_flag("ISDIR"),       do: :isdir
+  def convert_flag("MODIFY"),      do: :modified
+  def convert_flag("CLOSE_WRITE"), do: :modified
+  def convert_flag("CLOSE"),       do: :closed
+  def convert_flag("MOVED_TO"),    do: :renamed
+  def convert_flag("ATTRIB"),      do: :attribute
+  def convert_flag(_),             do: :undefined
 end

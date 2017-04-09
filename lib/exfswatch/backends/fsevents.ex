@@ -1,7 +1,9 @@
+alias ExFSWatch.Utils
+
 defmodule ExFSWatch.Backends.Fsevents do
 
   def find_executable do
-    :code.priv_dir(:exfswatch) ++ 'mac_listener'
+    :code.priv_dir(:exfswatch) ++ '/mac_listener'
   end
 
   def start_port(path, listener_extra_args) do
