@@ -9,7 +9,7 @@ defmodule ExFSWatch.Backends.InotifyWaitTest do
 
   test "dir create" do
     assert line_to_event("/one/two/ CREATE file") ==
-      {"/one/two/file", [:create]}
+      {"/one/two/file", [:created]}
   end
 
   test "dir moved to" do
@@ -19,7 +19,7 @@ defmodule ExFSWatch.Backends.InotifyWaitTest do
 
   test "dir is_dir create" do
     assert line_to_event("/one/two/ CREATE,ISDIR dir") ==
-      {"/one/two/dir", [:create, :isdir]}
+      {"/one/two/dir", [:created, :isdir]}
   end
 
   test "file write close" do
@@ -29,6 +29,6 @@ defmodule ExFSWatch.Backends.InotifyWaitTest do
 
   test "file delete_self" do
     assert line_to_event("/one/two/file DELETE_SELF") ==
-      {"/one/two/file", [:delete_self]}
+      {"/one/two/file", [:undefined]}
   end
 end
