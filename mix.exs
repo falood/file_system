@@ -31,7 +31,7 @@ defmodule ExFSWatch.Mixfile do
 
   def application do
     [ mod: { ExFSWatch, [] },
-      included_applications: [:logger],
+      applications: [:logger],
     ]
   end
 
