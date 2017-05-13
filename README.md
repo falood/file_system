@@ -31,7 +31,7 @@ defmodule Excellent.Mixfile do
 
   defp deps do
     [
-      { :exfswatch, "~> 0.4.1", only: :test },
+      { :exfswatch, "~> 0.4.2", only: :test },
     ]
   end
   ...
