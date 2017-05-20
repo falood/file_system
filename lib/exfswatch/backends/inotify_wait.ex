@@ -8,10 +8,10 @@ defmodule ExFSWatch.Backends.InotifyWait do
 
   def start_port(path, listener_extra_args) do
     path = path |> Utils.format_path()
-    args = listener_extra_args ++ [
+    args = [
       '-c', 'inotifywait $0 $@ & PID=$!; read a; kill $PID',
       '-m', '-e', 'modify', '-e', 'close_write', '-e', 'moved_to', '-e', 'create',
-      '-r' | path]
+      '-r'] ++ listener_extra_args ++ path
     Port.open(
       {:spawn_executable, find_executable()},
       [:stream, :exit_status, {:line, 16384}, {:args, args}, {:cd, System.tmp_dir!()}]
