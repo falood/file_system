@@ -1,7 +1,7 @@
 alias ExFSWatch.Utils
 
 defmodule ExFSWatch.Backends.Fsevents do
-
+  @behaviour ExFSWatch.Backend
   def find_executable do
     :code.priv_dir(:exfswatch) ++ '/mac_listener'
   end

@@ -8,11 +8,23 @@ defmodule ExFSWatch do
       |> String.split
       |> Enum.map(&to_char_list/1)
     quote do
-      def __dirs__, do: unquote(Keyword.fetch!(options, :dirs))
-      def __listener_extra_args__, do: unquote(extra_args)
-      def start,    do: ExFSWatch.Supervisor.start_child __MODULE__
-      def child_spec do
-        Supervisor.Spec.worker(ExFSWatch.Worker, [__MODULE__], id: __MODULE__)
+      def start do
+        {:ok, worker_pid} = ExFSWatch.Supervisor.start_child(dirs: unquote(options[:dirs]), listener_extra_args: unquote(extra_args), name: __MODULE__)
+        pid = spawn_link(fn ->
+          ExFSWatch.Worker.subscribe(worker_pid)
+          await_events(worker_pid)
+        end)
+        {:ok, pid}
+      end
+
+      defp await_events(pid) do
+        receive do
+          {:file_event, ^pid, file_path, events} ->
+            callback(file_path, events)
+            await_events(pid)
+          {:file_event, ^pid, :stop} ->
+            callback(:stop)
+        end
       end
     end
   end

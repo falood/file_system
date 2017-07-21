@@ -38,6 +38,30 @@ defmodule Excellent.Mixfile do
 end
 ```
 
+
+### Subscription API
+
+You can spawn a worker and subscribe to events from it:
+
+```elixir
+{:ok, pid} = ExFSWatch.Worker.start_link(dirs: ["/path/to/some/files"])
+ExFSWatch.Worker.subscribe(pid)
+```
+
+The pid you subscribed from will now receive messages like
+
+```
+{:file_event, worker_pid, file_path, events}
+```
+and
+```
+{:file_event, worker_pid, :stop}
+```
+
+### Callback API
+
+You can also `use ExFSWatch` to define a module with a callback that will be called when filesystem events occur. This requires you to specify directories to watch at compile-time.
+
 write `lib/monitor.ex`
 
 ```elixir
