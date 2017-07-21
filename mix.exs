@@ -1,11 +1,12 @@
-defmodule Mix.Tasks.Compile.Src do
+defmodule Mix.Tasks.Compile.Exfswatch do
   def run(_) do
     case :os.type() do
       {:unix, :darwin} ->
         Mix.shell.cmd("clang -framework CoreFoundation -framework CoreServices -Wno-deprecated-declarations c_src/mac/*.c -o priv/mac_listener")
       {:unix, :freebsd} ->
         Mix.shell.cmd("cc c_src/bsd/*.c -o priv/kqueue")
-      _ -> nil
+      _ ->
+        :ok
     end
   end
 end
@@ -17,7 +18,7 @@ defmodule ExFSWatch.Mixfile do
     [ app: :exfswatch,
       version: "0.4.2",
       elixir: "~> 1.0",
-      compilers: [ :src, :elixir, :app ],
+      compilers: [ :exfswatch, :elixir, :app ],
       deps: deps(),
       description: "A file change watcher wrapper based on [fs](https://github.com/synrc/fs)",
       source_url: "https://github.com/falood/exfswatch",
