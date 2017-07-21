@@ -1,7 +1,7 @@
 alias ExFSWatch.Utils
 
 defmodule ExFSWatch.Backends.Kqueue do
-
+  @behaviour ExFSWatch.Backend
   def known_events do
     [:created, :deleted, :renamed, :closed, :modified, :isdir, :undefined]
   end

@@ -1,7 +1,7 @@
 alias ExFSWatch.Utils
 
 defmodule ExFSWatch.Backends.InotifyWaitWin32 do
-
+  @behaviour ExFSWatch.Backend
   @re :re.compile('^(.*\\\\.*) ([A-Z_,]+) (.*)$', [:unicode]) |> elem(1)
 
   def find_executable do

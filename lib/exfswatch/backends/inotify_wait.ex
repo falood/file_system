@@ -1,7 +1,7 @@
 alias ExFSWatch.Utils
 
 defmodule ExFSWatch.Backends.InotifyWait do
-
+  @behaviour ExFSWatch.Backend
   def find_executable do
     System.find_executable("sh") |> to_charlist
   end
@@ -29,7 +29,7 @@ defmodule ExFSWatch.Backends.InotifyWait do
     |> scan2(line)
   end
 
-  def scan1(line) do
+  defp scan1(line) do
     re = ~r/^(.*) ([A-Z_,]+) (.*)$/
     case Regex.scan re, line do
       [] -> {:error, :unknown}
@@ -38,7 +38,8 @@ defmodule ExFSWatch.Backends.InotifyWait do
     end
 
   end
-  def scan2({:error, :unknown}, line) do
+
+  defp scan2({:error, :unknown}, line) do
     re = ~r/^(.*) ([A-Z_,]+)$/
     case Regex.scan re, line do
       [] -> {:error, :unknown}
@@ -46,20 +47,21 @@ defmodule ExFSWatch.Backends.InotifyWait do
         {path, parse_events(events)}
     end
   end
-  def scan2(res, _), do: res
 
-  def parse_events(events) do
+  defp scan2(res, _), do: res
+
+  defp parse_events(events) do
     String.split(events, ",")
     |> Enum.map(&(convert_flag &1))
   end
 
-  def convert_flag("CREATE"),      do: :created
-  def convert_flag("DELETE"),      do: :deleted
-  def convert_flag("ISDIR"),       do: :isdir
-  def convert_flag("MODIFY"),      do: :modified
-  def convert_flag("CLOSE_WRITE"), do: :modified
-  def convert_flag("CLOSE"),       do: :closed
-  def convert_flag("MOVED_TO"),    do: :renamed
-  def convert_flag("ATTRIB"),      do: :attribute
-  def convert_flag(_),             do: :undefined
+  defp convert_flag("CREATE"),      do: :created
+  defp convert_flag("DELETE"),      do: :deleted
+  defp convert_flag("ISDIR"),       do: :isdir
+  defp convert_flag("MODIFY"),      do: :modified
+  defp convert_flag("CLOSE_WRITE"), do: :modified
+  defp convert_flag("CLOSE"),       do: :closed
+  defp convert_flag("MOVED_TO"),    do: :renamed
+  defp convert_flag("ATTRIB"),      do: :attribute
+  defp convert_flag(_),             do: :undefined
 end
