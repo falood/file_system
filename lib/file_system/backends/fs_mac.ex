@@ -1,12 +1,21 @@
+require Logger
+
 defmodule FileSystem.Backends.FSMac do
   use GenServer
   @behaviour FileSystem.Backend
 
   def bootstrap do
-    # check whether binary file existed
-    # compile
-    Mix.shell.cmd("clang -framework CoreFoundation -framework CoreServices -Wno-deprecated-declarations c_src/mac/*.c -o #{find_executable()}")
-    # compile failed warning
+    exec_file = find_executable()
+    unless File.exists?(exec_file) do
+      Logger.info "Compiling executable file..."
+      cmd = "clang -framework CoreFoundation -framework CoreServices -Wno-deprecated-declarations c_src/mac/*.c -o #{exec_file}"
+      if Mix.shell.cmd(cmd) > 0 do
+        Logger.error "Compile executable file error, try to run `#{cmd}` manually."
+        raise CompileError
+      else
+        Logger.info "Compile executable file, Done."
+      end
+    end
   end
 
   def supported_systems do
