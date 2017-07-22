@@ -1,3 +1,10 @@
+defmodule Mix.Tasks.Compile.FileSystem do
+  def run(_) do
+    FileSystem.backend.bootstrap
+  end
+end
+
+
 defmodule FileSystem.Mixfile do
   use Mix.Project
 
@@ -5,7 +12,7 @@ defmodule FileSystem.Mixfile do
     [ app: :file_system,
       version: "0.1.0",
       elixir: "~> 1.5-rc",
-      compilers: [ :elixir, :app ],
+      compilers: [ :file_system , :elixir, :app],
       deps: deps(),
       description: "A file system change watcher wrapper based on [fs](https://github.com/synrc/fs)",
       source_url: "https://github.com/falood/file_system",

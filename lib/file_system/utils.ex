@@ -13,7 +13,6 @@ defmodule FileSystem.Utils do
         any     -> any
       end
     os_type in backend.supported_systems || raise "unsupported system for current backend"
-    backend.bootstrap
     backend
   end
 
