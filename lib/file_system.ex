@@ -1,4 +1,11 @@
 defmodule FileSystem do
+  defmacro __using__(options) do
+    quote do
+      @file_system_module_options unquote(options)
+      @before_compile FileSystem.ModuleApi
+    end
+  end
+
   def start_link(args) do
     FileSystem.Worker.start_link(args)
   end

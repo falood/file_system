@@ -1,4 +1,5 @@
 require Logger
+alias FileSystem.Utils
 
 defmodule FileSystem.Backends.FSMac do
   use GenServer
@@ -38,8 +39,8 @@ defmodule FileSystem.Backends.FSMac do
   end
 
   def init(args) do
-    port_path = FileSystem.Utils.format_path(args[:dirs])
-    port_args = (args[:listener_extra_args] || []) ++ ['-F' | port_path]
+    port_path = Utils.format_path(args[:dirs])
+    port_args = Utils.format_args(args[:listener_extra_args]) ++ ['-F' | port_path]
     port = Port.open(
       {:spawn_executable, find_executable()},
       [:stream, :exit_status, {:line, 16384}, {:args, port_args}, {:cd, System.tmp_dir!()}]

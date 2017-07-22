@@ -27,4 +27,12 @@ defmodule FileSystem.Utils do
     [path] |> format_path
   end
 
+  def format_args(nil), do: []
+  def format_args(str) when is_binary(str) do
+    str |> String.split |> format_args
+  end
+  def format_args(list) when is_list(list) do
+    list |> Enum.map(&to_charlist/1)
+  end
+
 end
