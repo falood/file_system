@@ -60,8 +60,12 @@ defmodule FileSystem.Backends.FSLinux do
   end
 
   def parse_line(line) do
-    [dir, events, file] = line |> to_string |> String.split
-    {Path.join(dir, file), events |> String.split(",") |> Enum.map(&convert_flag/1)}
+    {path, flags} =
+      case line |> to_string |> String.split(~r/\s/, trim: true) do
+        [dir, flags, file] -> {Path.join(dir, file), flags}
+        [path, flags]      -> {path, flags}
+      end
+    {path, flags |> String.split(",") |> Enum.map(&convert_flag/1)}
   end
 
   defp convert_flag("CREATE"),      do: :created
