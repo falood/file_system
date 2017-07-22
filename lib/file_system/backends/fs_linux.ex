@@ -34,8 +34,9 @@ defmodule FileSystem.Backends.FSLinux do
     inotifywait_exec_file = find_executable()
     port_path = Utils.format_path(args[:dirs])
     port_args = [
-      '-c', '#{inotifywait_exec_file} $0 $@ & PID=$!; read a; kill $PID', '-m', '-e', 'modify',
-      '-e', 'close_write', '-e', 'moved_to', '-e', 'create', '-r'
+      '-c', '#{inotifywait_exec_file} $0 $@ & PID=$!; read a; kill $PID', '-m',
+      '-e', 'modify', '-e', 'close_write', '-e', 'moved_to', '-e', 'create',
+      '-e', 'delete', '-e', 'attrib', '--quiet', '-r'
     ] ++ Utils.format_args(args[:listener_extra_args]) ++ port_path
     port = Port.open(
       {:spawn_executable, to_charlist(sh_exec_file)},
