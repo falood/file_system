@@ -1,4 +1,4 @@
-defmodule ExFSWatch.Backend do
+defmodule FileSystem.Backend do
   @callback find_executable() :: Sting.t
   @callback start_port(String.t, keyword()) :: port()
   @callback known_events() :: [atom()]

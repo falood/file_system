@@ -1,6 +1,6 @@
-defmodule ExFSWatch.Backends.InotifyWaitTest do
+defmodule FileSystem.Backends.InotifyWaitTest do
   use ExUnit.Case
-  import ExFSWatch.Backends.InotifyWait
+  import FileSystem.Backends.InotifyWait
 
   test "dir write close" do
     assert line_to_event("/one/two/ CLOSE_WRITE,CLOSE file") ==

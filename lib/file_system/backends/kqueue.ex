@@ -1,13 +1,13 @@
-alias ExFSWatch.Utils
+alias FileSystem.Utils
 
-defmodule ExFSWatch.Backends.Kqueue do
-  @behaviour ExFSWatch.Backend
+defmodule FileSystem.Backends.Kqueue do
+
   def known_events do
     [:created, :deleted, :renamed, :closed, :modified, :isdir, :undefined]
   end
 
   def find_executable do
-    :code.priv_dir(:exfswatch) ++ '/kqueue'
+    :code.priv_dir(:file_system) ++ '/kqueue'
   end
 
   def start_port(path, listener_extra_args) do

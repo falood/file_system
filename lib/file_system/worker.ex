@@ -1,4 +1,4 @@
-defmodule ExFSWatch.Worker do
+defmodule FileSystem.Worker do
   use GenServer
 
   def start_link(args) do
@@ -12,7 +12,7 @@ defmodule ExFSWatch.Worker do
 
   def init(args) do
     dirs = args[:dirs]
-    backend = args[:backend] || ExFSWatch.backend
+    backend = args[:backend] || FileSystem.backend
     listener_extra_args = args[:listener_extra_args] || []
     port = backend.start_port(dirs, listener_extra_args)
     {:ok, %{port: port, backend: backend, subscribers: %{}}}
