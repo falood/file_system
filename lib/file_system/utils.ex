@@ -5,14 +5,15 @@ defmodule FileSystem.Utils do
       Application.get_env(:file_system, :backend,
         case os_type do
           {:unix,  :darwin}  -> :fs_mac
-          {:unix,  :linux}   -> :fs_linux
+          {:unix,  :linux}   -> :fs_inotify
+          {:unix,  :freebsd} -> :fs_inotify
           _                  -> nil
         end
       ) |> case do
-        nil       -> raise "undefined backend"
-        :fs_mac   -> FileSystem.Backends.FSMac
-        :fs_linux -> FileSystem.Backends.FSLinux
-        any       -> any
+        nil         -> raise "undefined backend"
+        :fs_mac     -> FileSystem.Backends.FSMac
+        :fs_inotify -> FileSystem.Backends.FSInotify
+        any         -> any
       end
     os_type in backend.supported_systems || raise "unsupported system for current backend"
     backend

@@ -1,6 +1,6 @@
-defmodule FileSystem.Backends.FSLinuxTest do
+defmodule FileSystem.Backends.FSInotifyTest do
   use ExUnit.Case
-  import FileSystem.Backends.FSLinux
+  import FileSystem.Backends.FSInotify
 
   test "dir write close" do
     assert parse_line("/one/two/ CLOSE_WRITE,CLOSE file") ==

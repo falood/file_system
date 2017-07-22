@@ -1,7 +1,7 @@
 require Logger
 alias FileSystem.Utils
 
-defmodule FileSystem.Backends.FSLinux do
+defmodule FileSystem.Backends.FSInotify do
   use GenServer
   @behaviour FileSystem.Backend
 
@@ -14,7 +14,7 @@ defmodule FileSystem.Backends.FSLinux do
   end
 
   def supported_systems do
-    [{:unix, :linux}]
+    [{:unix, :linux}, {:unix, :freebsd}]
   end
 
   def known_events do
@@ -30,16 +30,13 @@ defmodule FileSystem.Backends.FSLinux do
   end
 
   def init(args) do
-    sh_exec_file = System.find_executable("sh")
-    inotifywait_exec_file = find_executable()
     port_path = Utils.format_path(args[:dirs])
     port_args = [
-      '-c', '#{inotifywait_exec_file} $0 $@ & PID=$!; read a; kill $PID', '-m',
       '-e', 'modify', '-e', 'close_write', '-e', 'moved_to', '-e', 'create',
-      '-e', 'delete', '-e', 'attrib', '--quiet', '-r'
+      '-e', 'delete', '-e', 'attrib', '--quiet', '-m', '-r'
     ] ++ Utils.format_args(args[:listener_extra_args]) ++ port_path
     port = Port.open(
-      {:spawn_executable, to_charlist(sh_exec_file)},
+      {:spawn_executable, to_charlist(find_executable())},
       [:stream, :exit_status, {:line, 16384}, {:args, port_args}, {:cd, System.tmp_dir!()}]
     )
     {:ok, %{port: port, worker_pid: args[:worker_pid]}}
