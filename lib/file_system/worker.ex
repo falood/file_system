@@ -2,20 +2,13 @@ defmodule FileSystem.Worker do
   use GenServer
 
   def start_link(args) do
-    {args, opts} = Keyword.split(args, [:dirs, :backend, :listener_extra_args])
+    {args, opts} = Keyword.split(args, [:dirs, :listener_extra_args])
     GenServer.start_link(__MODULE__, args, opts)
   end
 
-  def subscribe(pid) do
-    GenServer.call(pid, :subscribe)
-  end
-
   def init(args) do
-    dirs = args[:dirs]
-    backend = args[:backend] || FileSystem.backend
-    listener_extra_args = args[:listener_extra_args] || []
-    port = backend.start_port(dirs, listener_extra_args)
-    {:ok, %{port: port, backend: backend, subscribers: %{}}}
+    {:ok, backend_pid} = FileSystem.backend.start_link([{:worker_pid, self()} | args])
+    {:ok, %{backend_pid: backend_pid, subscribers: %{}}}
   end
 
   def handle_call(:subscribe, {pid, _}, state) do
@@ -24,20 +17,10 @@ defmodule FileSystem.Worker do
     {:reply, :ok, state}
   end
 
-  def handle_info({_port, {:data, {:eol, line}}}, state) do
-    {file_path, events} = state.backend.line_to_event(line)
-    state.subscribers |> Enum.each(fn {_ref, pid} ->
-      send pid, {:file_event, self(), file_path, events}
+  def handle_info({:backend_file_event, backend_pid, file_event}, %{backend_pid: backend_pid}=state) do
+    state.subscribers |> Enum.each(fn {_ref, subscriber_pid} ->
+      send(subscriber_pid, {:file_event, self(), file_event})
     end)
-
-    {:noreply, state}
-  end
-
-  def handle_info({_port, {:exit_status, 0}}, state) do
-    state.subscribers |> Enum.each(fn {_ref, pid} ->
-      send pid, {:file_event, self(), :stop}
-    end)
-
     {:noreply, state}
   end
 

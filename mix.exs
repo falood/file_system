@@ -1,16 +1,3 @@
-defmodule Mix.Tasks.Compile.FileSystem do
-  def run(_) do
-    case :os.type() do
-      {:unix, :darwin} ->
-        Mix.shell.cmd("clang -framework CoreFoundation -framework CoreServices -Wno-deprecated-declarations c_src/mac/*.c -o priv/mac_listener")
-      {:unix, :freebsd} ->
-        Mix.shell.cmd("cc c_src/bsd/*.c -o priv/kqueue")
-      _ ->
-        :ok
-    end
-  end
-end
-
 defmodule FileSystem.Mixfile do
   use Mix.Project
 
@@ -18,7 +5,7 @@ defmodule FileSystem.Mixfile do
     [ app: :file_system,
       version: "0.1.0",
       elixir: "~> 1.5-rc",
-      compilers: [ :file_system, :elixir, :app ],
+      compilers: [ :elixir, :app ],
       deps: deps(),
       description: "A file system change watcher wrapper based on [fs](https://github.com/synrc/fs)",
       source_url: "https://github.com/falood/file_system",

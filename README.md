@@ -47,7 +47,7 @@ FileSystem.Worker.subscribe(pid)
 The pid you subscribed from will now receive messages like
 
 ```
-{:file_event, worker_pid, file_path, events}
+{:file_event, worker_pid, {file_path, events}}
 ```
 and
 ```

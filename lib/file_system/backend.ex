@@ -1,6 +1,6 @@
 defmodule FileSystem.Backend do
-  @callback find_executable() :: Sting.t
-  @callback start_port(String.t, keyword()) :: port()
+  @callback bootstrap() :: any()
+  @callback supported_systems() :: [{atom(), atom()}]
   @callback known_events() :: [atom()]
-  @callback line_to_event(String.t) :: {String.t, [atom()]}
+  @callback find_executable() :: Sting.t
 end
