@@ -12,11 +12,14 @@ defmodule FileSystem.Backends.FSMac do
       cmd = "clang -framework CoreFoundation -framework CoreServices -Wno-deprecated-declarations c_src/mac/*.c -o #{exec_file}"
       if Mix.shell.cmd(cmd) > 0 do
         Logger.error "Compile executable file error, try to run `#{cmd}` manually."
-        raise CompileError
+        raise "compile backend error"
       else
         Logger.info "Compile executable file, Done."
       end
     end
+    :ok
+  rescue
+    _ -> {:error, :fs_mac_bootstrap_error}
   end
 
   def supported_systems do
