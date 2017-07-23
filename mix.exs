@@ -12,7 +12,6 @@ defmodule FileSystem.Mixfile do
     [ app: :file_system,
       version: "0.1.0",
       elixir: "~> 1.5-rc",
-      # compilers: [ :file_system , :elixir, :app],
       compilers: [:elixir, :app, :file_system],
       deps: deps(),
       description: "A file system change watcher wrapper based on [fs](https://github.com/synrc/fs)",
