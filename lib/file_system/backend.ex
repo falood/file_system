@@ -34,7 +34,10 @@ defmodule FileSystem.Backend do
   end
   defp backend_module(module) do
     functions = module.__info__(:functions)
-    {:start_link, 1} in functions && {:validate!, 0} in functions || raise "illegal backend"
+    {:start_link, 1} in functions &&
+    {:bootstrap, 0} in functions &&
+    {:supported_systems, 0} in functions ||
+      raise "illegal backend"
   rescue
     _ ->
       Logger.error "It seems you are using custom backend `#{inspect module}`, make sure it's a legal file_system backend module."
