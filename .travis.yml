@@ -5,9 +5,6 @@ matrix:
       sudo: required
       otp_release: 20.0
       elixir: 1.5.0-rc.2
-    - os: osx
-      otp_release: 20.0
-      elixir: 1.5.0-rc.2
 notifications:
   recipients:
     - self@falood.me
