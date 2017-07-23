@@ -1,27 +1,21 @@
-defmodule Mix.Tasks.Compile.Exfswatch do
+defmodule Mix.Tasks.Compile.FileSystem do
   def run(_) do
-    case :os.type() do
-      {:unix, :darwin} ->
-        Mix.shell.cmd("clang -framework CoreFoundation -framework CoreServices -Wno-deprecated-declarations c_src/mac/*.c -o priv/mac_listener")
-      {:unix, :freebsd} ->
-        Mix.shell.cmd("cc c_src/bsd/*.c -o priv/kqueue")
-      _ ->
-        :ok
-    end
+    FileSystem.backend.bootstrap
   end
 end
 
-defmodule ExFSWatch.Mixfile do
+
+defmodule FileSystem.Mixfile do
   use Mix.Project
 
   def project do
-    [ app: :exfswatch,
-      version: "0.4.2",
-      elixir: "~> 1.0",
-      compilers: [ :exfswatch, :elixir, :app ],
+    [ app: :file_system,
+      version: "0.1.0",
+      elixir: "~> 1.5-rc",
+      compilers: [:elixir, :app, :file_system],
       deps: deps(),
-      description: "A file change watcher wrapper based on [fs](https://github.com/synrc/fs)",
-      source_url: "https://github.com/falood/exfswatch",
+      description: "A file system change watcher wrapper based on [fs](https://github.com/synrc/fs)",
+      source_url: "https://github.com/falood/file_system",
       package: package(),
       docs: [
         extras: ["README.md"],
@@ -31,18 +25,19 @@ defmodule ExFSWatch.Mixfile do
   end
 
   def application do
-    [ mod: { ExFSWatch, [] },
-      applications: [:logger],
+    [
+      extra_applications: [:logger],
     ]
   end
 
   defp deps do
-    [ { :ex_doc, "~> 0.14", only: :docs },
+    [
+      { :ex_doc, "~> 0.14", only: :docs },
     ]
   end
 
   defp package do
-    %{ maintainers: ["Xiangrong Hao"],
+    %{ maintainers: ["Xiangrong Hao", "Max Veytsman"],
        files: [
          "lib", "README.md", "mix.exs",
          "c_src/bsd/main.c",
@@ -55,7 +50,7 @@ defmodule ExFSWatch.Mixfile do
          "priv/inotifywait.exe",
        ],
        licenses: ["WTFPL"],
-       links: %{"Github" => "https://github.com/falood/exfswatch"}
+       links: %{"Github" => "https://github.com/falood/file_system"}
      }
   end
 end
