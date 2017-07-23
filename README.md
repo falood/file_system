@@ -42,6 +42,13 @@ You can spawn a worker and subscribe to events from it:
 FileSystem.subscribe(pid)
 ```
 
+or
+
+```elixir
+{:ok, pid} = FileSystem.start_link(dirs: ["/path/to/some/files"], name: :my_monitor_name)
+FileSystem.subscribe(:my_monitor_name)
+```
+
 The pid you subscribed from will now receive messages like
 
 ```
