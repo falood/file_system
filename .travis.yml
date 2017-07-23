@@ -1,0 +1,16 @@
+os:
+  - linux
+  - osx
+language: elixir
+matrix:
+  include:
+    - otp_release: 20.0
+      elixir: 1.5.0-rc.2
+sudo: true
+notifications:
+  recipients:
+    - self@falood.me
+before_install:
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install inotify-tools; fi
+before_script:
+  - mix deps.get --only test
