@@ -2,13 +2,18 @@ defmodule FileSystem.Worker do
   use GenServer
 
   def start_link(args) do
-    {args, opts} = Keyword.split(args, [:dirs, :listener_extra_args])
+    {args, opts} = Keyword.split(args, [:backend, :dirs, :listener_extra_args])
     GenServer.start_link(__MODULE__, args, opts)
   end
 
   def init(args) do
-    {:ok, backend_pid} = FileSystem.backend.start_link([{:worker_pid, self()} | args])
-    {:ok, %{backend_pid: backend_pid, subscribers: %{}}}
+    case FileSystem.Backend.backend(args[:backend]) do
+      {:ok, backend} ->
+        {:ok, backend_pid} = backend.start_link([{:worker_pid, self()} | Keyword.drop(args, [:backend])])
+        {:ok, %{backend_pid: backend_pid, subscribers: %{}}}
+      {:error, reason} ->
+        {:stop, reason}
+    end
   end
 
   def handle_call(:subscribe, {pid, _}, state) do

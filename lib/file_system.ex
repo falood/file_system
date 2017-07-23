@@ -13,9 +13,4 @@ defmodule FileSystem do
   def subscribe(pid) do
     GenServer.call(pid, :subscribe)
   end
-
-  @backend FileSystem.Backend.backend
-  def backend, do: @backend
-  def known_events, do: @backend.known_events()
-
 end

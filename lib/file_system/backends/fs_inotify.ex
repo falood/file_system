@@ -8,9 +8,11 @@ defmodule FileSystem.Backends.FSInotify do
 
   def bootstrap do
     exec_file = find_executable()
-    unless File.exists?(exec_file) do
+    if is_nil(exec_file) do
       Logger.error "`inotify-tools` is needed to run `file_system` for your system, check https://github.com/rvoicilas/inotify-tools/wiki for more information about how to install it."
-      raise CompileError
+      {:error, :fs_inotify_bootstrap_error}
+    else
+      :ok
     end
   end
 

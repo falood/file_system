@@ -99,9 +99,3 @@ FileSystem.start_link(dirs: ["/path/to/some/files"], listener_extra_args: "--lat
 ```
 
 See the [fs source](https://github.com/synrc/fs/tree/master/c_src) for more details.
-
-## List Events from Backend
-
-```shell
-iex > FileSystem.known_events
-```

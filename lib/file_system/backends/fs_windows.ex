@@ -8,9 +8,11 @@ defmodule FileSystem.Backends.FSWindows do
 
   def bootstrap do
     exec_file = find_executable()
-    unless File.exists?(exec_file) do
+    if File.exists?(exec_file) do
+      :ok
+    else
       Logger.error "Can't find executable `inotifywait.exe`, make sure the file is in your priv dir."
-      raise CompileError
+      {:error, :fs_windows_bootstrap_error}
     end
   end
 
