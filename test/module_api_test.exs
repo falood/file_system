@@ -1,5 +1,5 @@
 defmodule FileSystem.ModuleApiTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
 
   test "module api" do
     tmp_dir = System.cmd("mktemp", ["-d"]) |> elem(0) |> String.trim
@@ -15,6 +15,7 @@ defmodule FileSystem.ModuleApiTest do
     end
 
     MyMonitor.start
+    :timer.sleep(200)
     File.touch("#{tmp_dir}/a")
     assert_receive {^ref, _path, _events}, 5000
     File.rm_rf!(tmp_dir)

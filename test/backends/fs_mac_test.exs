@@ -1,5 +1,5 @@
 defmodule FileSystem.Backends.FSMacTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
   import FileSystem.Backends.FSMac
 
   test "file modified" do

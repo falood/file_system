@@ -1,5 +1,5 @@
 defmodule FileSystem.Backends.FSInotifyTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
   import FileSystem.Backends.FSInotify
 
   test "dir write close" do
