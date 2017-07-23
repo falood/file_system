@@ -38,8 +38,8 @@ end
 You can spawn a worker and subscribe to events from it:
 
 ```elixir
-{:ok, pid} = FileSystem.Worker.start_link(dirs: ["/path/to/some/files"])
-FileSystem.Worker.subscribe(pid)
+{:ok, pid} = FileSystem.start_link(dirs: ["/path/to/some/files"])
+FileSystem.subscribe(pid)
 ```
 
 The pid you subscribed from will now receive messages like
