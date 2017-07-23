@@ -25,7 +25,8 @@ defmodule FileSystem.Worker do
   end
 
   def handle_info({:DOWN, _pid, _, ref, _reason}, state) do
-    {:noreply, pop_in(state.subscribers[ref])}
+    subscribers = Map.drop(state.subscribers, [ref]) |> IO.inspect
+    {:noreply, %{state | subscribers: subscribers}}
   end
 
   def handle_info(_, state) do

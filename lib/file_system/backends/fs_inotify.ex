@@ -41,6 +41,8 @@ defmodule FileSystem.Backends.FSInotify do
       {:spawn_executable, to_charlist(find_executable())},
       [:stream, :exit_status, {:line, 16384}, {:args, port_args}, {:cd, System.tmp_dir!()}]
     )
+    Process.link(port)
+    Process.flag(:trap_exit, true)
     {:ok, %{port: port, worker_pid: args[:worker_pid]}}
   end
 
@@ -53,6 +55,11 @@ defmodule FileSystem.Backends.FSInotify do
   def handle_info({port, {:exit_status, _}}, %{port: port}=state) do
     send(state.worker_pid, {:backend_file_event, self(), :stop})
     {:stop, :normal, state}
+  end
+
+  def handle_info({:EXIT, port, _reason}, %{port: port}=state) do
+    send(state.worker_pid, {:backend_file_event, self(), :stop})
+    {:noreply, state}
   end
 
   def handle_info(_, state) do
