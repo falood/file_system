@@ -59,31 +59,34 @@ and
 {:file_event, worker_pid, :stop}
 ```
 
-### Callback API
-
-You can also `use FileSystem` to define a module with a callback that will be called when filesystem events occur. This requires you to specify directories to watch at compile-time.
-
-write `lib/monitor.ex`
+### Example with GenServer
 
 ```elixir
-defmodule Monitor do
-  use FileSystem, dirs: ["/tmp/test"]
+defmodule Watcher do
+  use GenServer
 
-  def callback(:stop) do
-    IO.puts "STOP"
+  def start_link(args) do
+    GenServer.start_link(__MODULE__, args)
   end
 
-  def callback(file_path, events) do
-    IO.inspect {file_path, events}
+  def init(args) do
+    {:ok, watcher_pid} = FileSystem.start_link(args)
+    FileSystem.subscribe(watcher_pid)
+    {:ok, %{watcher_pid: watcher_pid}}
+  end
+
+  def handle_info({:file_event, ^watcher_pid, {path, events}}, %{watcher_pid: watcher_pid}=state) do
+    # YOUR OWN LOGIC FOR PATH AND EVENTS
+    {:noreply, state}
+  end
+
+  def handle_info({:file_event, ^watcher_pid, :stop}, %{watcher_pid: watcher_pid}=state) do
+    # YOUR OWN LOGIC WHEN MONITOR STOP
+    {:noreply, state}
   end
 end
 ```
 
-Execute in iex
-
-```shell
-iex > Monitor.start
-```
 
 ## Tweaking behaviour via listener extra arguments
 
@@ -92,7 +95,7 @@ For each platform, you can pass extra arguments to the underlying listener proce
 Here is an example to get instant notifications on file changes for Mac OS X:
 
 ```elixir
-use FileSystem, dirs: ["/tmp/test"], listener_extra_args: "--latency=0.0"
+FileSystem.start_link(dirs: ["/path/to/some/files"], listener_extra_args: "--latency=0.0")
 ```
 
 See the [fs source](https://github.com/synrc/fs/tree/master/c_src) for more details.
