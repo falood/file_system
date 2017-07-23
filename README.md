@@ -5,13 +5,11 @@ A file change watcher wrapper based on [fs](https://github.com/synrc/fs)
 
 ## System Support
 
-Just like [fs](https://github.com/synrc/fs#backends)
-
 - Mac fsevent
-- Linux inotify
-- Windows inotify-win (untested)
+- Linux and FreeBSD inotify
+- Windows inotify-win
 
-NOTE: On Linux you need to install inotify-tools.
+NOTE: On Linux and FreeBSD you need to install inotify-tools.
 
 ## Usage
 
