@@ -40,7 +40,6 @@ defmodule FileSystem.Mixfile do
     %{ maintainers: ["Xiangrong Hao", "Max Veytsman"],
        files: [
          "lib", "README.md", "mix.exs",
-         "c_src/bsd/main.c",
          "c_src/mac/cli.c",
          "c_src/mac/cli.h",
          "c_src/mac/common.h",
