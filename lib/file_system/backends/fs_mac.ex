@@ -31,7 +31,7 @@ defmodule FileSystem.Backends.FSMac do
   end
 
   def find_executable do
-    :code.priv_dir(:file_system) ++ '/mac_listener'
+    (:code.priv_dir(:file_system) ++ '/mac_listener') |> to_string
   end
 
   def start_link(args) do
@@ -42,7 +42,7 @@ defmodule FileSystem.Backends.FSMac do
     port_path = Utils.format_path(args[:dirs])
     port_args = Utils.format_args(args[:listener_extra_args]) ++ ['-F' | port_path]
     port = Port.open(
-      {:spawn_executable, find_executable()},
+      {:spawn_executable, to_charlist(find_executable())},
       [:stream, :exit_status, {:line, 16384}, {:args, port_args}, {:cd, System.tmp_dir!()}]
     )
     {:ok, %{port: port, worker_pid: args[:worker_pid]}}

@@ -34,7 +34,7 @@ defmodule FileSystem.Backends.FSWindows do
     port_path = Utils.format_path(args[:dirs])
     format = ["%w", "%e", "%f"] |> Enum.join(@sep_char) |> to_charlist
     port_args = Utils.format_args(args[:listener_extra_args]) ++ [
-      '--format', format, '-m', '-r' | port_path
+      '--format', format, '--quiet', '-m', '-r' | port_path
     ]
     port = Port.open(
       {:spawn_executable, to_charlist(find_executable())},

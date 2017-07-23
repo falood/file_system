@@ -4,6 +4,7 @@ alias FileSystem.Utils
 defmodule FileSystem.Backends.FSInotify do
   use GenServer
   @behaviour FileSystem.Backend
+  @sep_char <<1>>
 
   def bootstrap do
     exec_file = find_executable()
@@ -31,9 +32,10 @@ defmodule FileSystem.Backends.FSInotify do
 
   def init(args) do
     port_path = Utils.format_path(args[:dirs])
+    format = ["%w", "%e", "%f"] |> Enum.join(@sep_char) |> to_charlist
     port_args = [
       '-e', 'modify', '-e', 'close_write', '-e', 'moved_to', '-e', 'create',
-      '-e', 'delete', '-e', 'attrib', '--quiet', '-m', '-r'
+      '-e', 'delete', '-e', 'attrib', '--format', format, '--quiet', '-m', '-r'
     ] ++ Utils.format_args(args[:listener_extra_args]) ++ port_path
     port = Port.open(
       {:spawn_executable, to_charlist(find_executable())},
@@ -59,7 +61,7 @@ defmodule FileSystem.Backends.FSInotify do
 
   def parse_line(line) do
     {path, flags} =
-      case line |> to_string |> String.split(~r/\s/, trim: true) do
+      case line |> to_string |> String.split(@sep_char, trim: true) do
         [dir, flags, file] -> {Path.join(dir, file), flags}
         [path, flags]      -> {path, flags}
       end
