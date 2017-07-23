@@ -23,8 +23,8 @@ defmodule FileSystemTest do
     assert_receive {:file_event, ^pid, {_path, _events}}, 5000
 
     Port.list
-    |> Enum.filter(fn port ->
-      port |> Port.info |> Access.get(:name) |> to_string |> String.contains?("file_system")
+    |> Enum.reject(fn port ->
+      :undefined == port |> Port.info |> Access.get(:os_pid)
     end)
     |> Enum.each(&Port.close/1)
     assert_receive {:file_event, ^pid, :stop}, 5000
