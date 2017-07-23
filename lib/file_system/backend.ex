@@ -6,11 +6,11 @@ defmodule FileSystem.Backend do
   @callback known_events() :: [atom()]
 
   def backend(backend) do
-    with {:ok, backend_module} <- backend_module(backend),
-         :ok <- validate_os(backend_module),
-         :ok <- backend_module.bootstrap
+    with {:ok, module} <- backend_module(backend),
+         :ok <- validate_os(backend, module),
+         :ok <- module.bootstrap
     do
-      {:ok, backend_module}
+      {:ok, module}
     else
       {:error, reason} -> {:error, reason}
     end
@@ -40,11 +40,17 @@ defmodule FileSystem.Backend do
       raise "illegal backend"
   rescue
     _ ->
-      Logger.error "It seems you are using custom backend `#{inspect module}`, make sure it's a legal file_system backend module."
+      Logger.error "You are using custom backend `#{inspect module}`, make sure it's a legal file_system backend module."
       {:error, :illegal_backend}
   end
 
-  defp validate_os(backend) do
-    :os.type() in backend.supported_systems() && :ok || {:error, :unsupported_system}
+  defp validate_os(backend, module) do
+    os_type = :os.type()
+    if os_type in module.supported_systems() do
+      :ok
+    else
+      Logger.error "The backend #{backend} you are using does NOT support your current system #{inspect os_type}."
+      {:error, :unsupported_system}
+    end
   end
 end
