@@ -3,7 +3,12 @@ defmodule FileSystem.Backends.FSMacTest do
   import FileSystem.Backends.FSMac
 
   test "file modified" do
-    assert parse_line('37425557\t0x00011400=[inodemetamod,modified]\t/one/two/file') ==
-      {"/one/two/file", [:inodemetamod, :modified]}
+    assert {"/one/two/file", [:inodemetamod, :modified]} ==
+      parse_line('37425557\t0x00011400=[inodemetamod,modified]\t/one/two/file')
+  end
+
+  test "whitespace in path" do
+    assert {"/one two/file", [:inodemetamod, :modified]} ==
+      parse_line('37425557\t0x00011400=[inodemetamod,modified]\t/one two/file')
   end
 end
