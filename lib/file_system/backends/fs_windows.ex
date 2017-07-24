@@ -31,7 +31,7 @@ defmodule FileSystem.Backends.FSWindows do
     [:created, :modified, :removed, :renamed, :undefined]
   end
 
-  def find_executable do
+  defp find_executable do
     (:code.priv_dir(:file_system) ++ '/inotifywait.exe') |> to_string
   end
 
