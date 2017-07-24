@@ -61,7 +61,7 @@ defmodule FileSystem.Backend do
     if os_type in module.supported_systems() do
       :ok
     else
-      Logger.error "The backend #{backend} you are using does NOT support your current system #{inspect os_type}."
+      Logger.error "The backend `#{backend}` you are using does NOT support your current system #{inspect os_type}."
       {:error, :unsupported_system}
     end
   end

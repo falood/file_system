@@ -18,8 +18,8 @@ defmodule FileSystem.Worker do
       {:ok, backend} ->
         {:ok, backend_pid} = backend.start_link([{:worker_pid, self()} | Keyword.drop(args, [:backend])])
         {:ok, %{backend_pid: backend_pid, subscribers: %{}}}
-      {:error, reason} ->
-        {:stop, reason}
+      {:error, _reason} ->
+        :ignore
     end
   end
 
