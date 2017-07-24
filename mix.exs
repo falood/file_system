@@ -3,7 +3,7 @@ defmodule FileSystem.Mixfile do
 
   def project do
     [ app: :file_system,
-      version: "0.1.0",
+      version: "0.1.1",
       elixir: "~> 1.5-rc",
       compilers: [:elixir, :app],
       deps: deps(),
