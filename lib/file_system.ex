@@ -24,11 +24,11 @@ defmodule FileSystem do
       iex> {:ok, pid} = FileSystem.start_link(dirs: ["/tmp/fs"])
       iex> FileSystem.subscribe(pid)
 
-  Get nstant notifications on file changes for Mac OS X:
+  Get instant notifications on file changes for Mac OS X:
 
       iex> FileSystem.start_link(dirs: ["/path/to/some/files"], listener_extra_args: "--latency=0.0")
 
-  Named monitir with specialty backend:
+  Named monitor with specified backend:
 
       iex> FileSystem.start_link(backend: :fs_mac, dirs: ["/tmp/fs"], name: :worker)
       iex> FileSystem.subscribe(:worker)
@@ -39,7 +39,7 @@ defmodule FileSystem do
   end
 
   @doc """
-  Regester current process as a subscriber of file_system worker.
+  Register the current process as a subscriber of a file_system worker.
   The pid you subscribed from will now receive messages like
 
       {:file_event, worker_pid, {file_path, events}}
