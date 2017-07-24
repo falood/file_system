@@ -2,6 +2,13 @@ require Logger
 alias FileSystem.Utils
 
 defmodule FileSystem.Backends.FSMac do
+  @moduledoc """
+  This file is a fork from https://github.com/synrc/fs.
+  FileSysetm backend for macos, a GenServer receive data from Port, parse event
+  and send it to the worker process.
+  will compile executable the buildin executable file when file the first time it is used.
+  """
+
   use GenServer
   @behaviour FileSystem.Backend
 
@@ -33,9 +40,10 @@ defmodule FileSystem.Backends.FSMac do
     ]
   end
 
-  def find_executable do
+  defp find_executable do
     (:code.priv_dir(:file_system) ++ '/mac_listener') |> to_string
   end
+
 
   def start_link(args) do
     GenServer.start_link(__MODULE__, args, [])
