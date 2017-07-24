@@ -1,10 +1,22 @@
 require Logger
 
 defmodule FileSystem.Backend do
+  @moduledoc """
+  FileSystem Backend Behaviour.
+  """
+
   @callback bootstrap() :: :ok | {:error, atom()}
   @callback supported_systems() :: [{atom(), atom()}]
   @callback known_events() :: [atom()]
 
+  @doc """
+  Get and validate backend module, return `{:ok, backend_module}` when success and
+  return `{:error, reason}` when fail.
+  When `nil` is given, will return default backend by os.
+  When a custom module is given, make sure `start_link/1`, `bootstrap/0` and
+  `supported_system/0` are defnied.
+  """
+  @spec backend(:atom) :: {:ok, atom()} | {:error, atom()}
   def backend(backend) do
     with {:ok, module} <- backend_module(backend),
          :ok <- validate_os(backend, module),

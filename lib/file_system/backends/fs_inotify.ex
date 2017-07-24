@@ -2,6 +2,13 @@ require Logger
 alias FileSystem.Utils
 
 defmodule FileSystem.Backends.FSInotify do
+  @moduledoc """
+  This file is a fork from https://github.com/synrc/fs.
+  FileSysetm backend for linux and freebsd, a GenServer receive data from Port, parse event
+  and send it to the worker process.
+  Need `inotify-tools` installed to use this backend.
+  """
+
   use GenServer
   @behaviour FileSystem.Backend
   @sep_char <<1>>
@@ -24,7 +31,7 @@ defmodule FileSystem.Backends.FSInotify do
     [:created, :deleted, :renamed, :closed, :modified, :isdir, :attribute, :undefined]
   end
 
-  def find_executable do
+  defp find_executable do
     System.find_executable("inotifywait")
   end
 

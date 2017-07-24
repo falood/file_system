@@ -2,6 +2,13 @@ require Logger
 alias FileSystem.Utils
 
 defmodule FileSystem.Backends.FSWindows do
+  @moduledoc """
+  This file is a fork from https://github.com/synrc/fs.
+  FileSysetm backend for windows, a GenServer receive data from Port, parse event
+  and send it to the worker process.
+  Need binary executable file packaged in to use this backend.
+  """
+
   use GenServer
   @behaviour FileSystem.Backend
   @sep_char <<1>>
