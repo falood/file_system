@@ -80,9 +80,6 @@ defmodule FileSystem.Backends.FSMac do
       end
     parse_options(t, result)
   end
-  defp parse_options([:no_defer | t], result) do
-    parse_options(t, ['--no-defer' | result])
-  end
   defp parse_options([{:no_defer, true} | t], result) do
     parse_options(t, ['--no-defer' | result])
   end
@@ -92,9 +89,6 @@ defmodule FileSystem.Backends.FSMac do
   defp parse_options([{:no_defer, value} | t], result) do
     Logger.error "unknown value `#{inspect value}` for no_defer, ignore"
     parse_options(t, result)
-  end
-  defp parse_options([:with_root | t], result) do
-    parse_options(t, ['--with-root' | result])
   end
   defp parse_options([{:with_root, true} | t], result) do
     parse_options(t, ['--with-root' | result])
