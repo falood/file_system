@@ -1,5 +1,4 @@
 require Logger
-alias FileSystem.Utils
 
 defmodule FileSystem.Backends.FSWindows do
   @moduledoc """
@@ -7,6 +6,10 @@ defmodule FileSystem.Backends.FSWindows do
   FileSysetm backend for windows, a GenServer receive data from Port, parse event
   and send it to the worker process.
   Need binary executable file packaged in to use this backend.
+
+  ## Backend Options
+
+    * `:recursive` (bool, default: true), monitor directories and their contents recursively
   """
 
   use GenServer
@@ -35,23 +38,55 @@ defmodule FileSystem.Backends.FSWindows do
     (:code.priv_dir(:file_system) ++ '/inotifywait.exe') |> to_string
   end
 
+  def parse_options(options) do
+    case Keyword.pop(options, :dirs) do
+      {nil, _} ->
+        Logger.error "required argument `dirs` is missing"
+        {:error, :missing_dirs_argument}
+      {dirs, rest} ->
+        format = ["%w", "%e", "%f"] |> Enum.join(@sep_char) |> to_charlist
+        args = [
+          '--format', format, '--quiet', '-m', '-r'
+          | dirs |> Enum.map(&Path.absname/1) |> Enum.map(&to_charlist/1)
+        ]
+        parse_options(rest, args)
+    end
+  end
+
+  defp parse_options([], result), do: {:ok, result}
+  defp parse_options([{:recursive, true} | t], result) do
+    parse_options(t, result)
+  end
+  defp parse_options([{:recursive, false} | t], result) do
+    parse_options(t, result -- ['-r'])
+  end
+  defp parse_options([{:recursive, value} | t], result) do
+    Logger.error "unknown value `#{inspect value}` for recursive, ignore"
+    parse_options(t, result)
+  end
+  defp parse_options([h | t], result) do
+    Logger.error "unknown option `#{inspect h}`, ignore"
+    parse_options(t, result)
+  end
+
   def start_link(args) do
     GenServer.start_link(__MODULE__, args, [])
   end
 
   def init(args) do
-    port_path = Utils.format_path(args[:dirs])
-    format = ["%w", "%e", "%f"] |> Enum.join(@sep_char) |> to_charlist
-    port_args = Utils.format_args(args[:listener_extra_args]) ++ [
-      '--format', format, '--quiet', '-m', '-r' | port_path
-    ]
-    port = Port.open(
-      {:spawn_executable, to_charlist(find_executable())},
-      [:stream, :exit_status, {:line, 16384}, {:args, port_args}, {:cd, System.tmp_dir!()}]
-    )
-    Process.link(port)
-    Process.flag(:trap_exit, true)
-    {:ok, %{port: port, worker_pid: args[:worker_pid]}}
+    {worker_pid, rest} = Keyword.pop(args, :worker_pid)
+    case parse_options(rest) do
+      {:ok, port_args} ->
+        port = Port.open(
+          {:spawn_executable, to_charlist(find_executable())},
+          [:stream, :exit_status, {:line, 16384}, {:args, port_args}, {:cd, System.tmp_dir!()}]
+        )
+        Process.link(port)
+        Process.flag(:trap_exit, true)
+        {:ok, %{port: port, worker_pid: worker_pid}}
+      {:error, _} ->
+        :ignore
+    end
   end
 
   def handle_info({port, {:data, {:eol, line}}}, %{port: port}=state) do

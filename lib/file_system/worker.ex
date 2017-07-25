@@ -8,18 +8,19 @@ defmodule FileSystem.Worker do
 
   @doc false
   def start_link(args) do
-    {args, opts} = Keyword.split(args, [:backend, :dirs, :listener_extra_args])
+    {opts, args} = Keyword.split(args, [:name])
     GenServer.start_link(__MODULE__, args, opts)
   end
 
   @doc false
   def init(args) do
-    case FileSystem.Backend.backend(args[:backend]) do
-      {:ok, backend} ->
-        {:ok, backend_pid} = backend.start_link([{:worker_pid, self()} | Keyword.drop(args, [:backend])])
-        {:ok, %{backend_pid: backend_pid, subscribers: %{}}}
-      {:error, _reason} ->
-        :ignore
+    {backend, rest} = Keyword.pop(args, :backend)
+    with {:ok, backend} <- FileSystem.Backend.backend(backend),
+         {:ok, backend_pid} <- backend.start_link([{:worker_pid, self()} | rest])
+    do
+      {:ok, %{backend_pid: backend_pid, subscribers: %{}}}
+    else
+      _ -> :ignore
     end
   end
 

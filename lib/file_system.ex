@@ -10,12 +10,12 @@ defmodule FileSystem do
       for `macos`, `:fs_inotify` for `linux` and `freebsd`,
       `:fs_windows` for `windows`
 
-    * `:listener_extra_args` (string, optional), extra args for
-      port backend.
-
     * `:name` (atom, optional), `name` can be used to subscribe as
       the same as pid when the `name` is given. The `name` should
       be the name of worker process.
+
+    * All rest options will treated as backend options. See backend
+      module documents for more details.
 
   ## Example
 
@@ -26,7 +26,7 @@ defmodule FileSystem do
 
   Get instant notifications on file changes for Mac OS X:
 
-      iex> FileSystem.start_link(dirs: ["/path/to/some/files"], listener_extra_args: "--latency=0.0")
+      iex> FileSystem.start_link(dirs: ["/path/to/some/files"], latency: 0)
 
   Named monitor with specified backend:
 
