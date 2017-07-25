@@ -88,14 +88,14 @@ end
 ```
 
 
-## Tweaking behaviour via listener extra arguments
+## Tweaking behaviour via extra arguments
 
-For each platform, you can pass extra arguments to the underlying listener process via the `listener_extra_args` option.
+For each platform, you can pass extra arguments to the underlying listener process.
+
+Each backend support different extra arguments, check backend module documentation for more information.
 
 Here is an example to get instant notifications on file changes for Mac OS X:
 
 ```elixir
-FileSystem.start_link(dirs: ["/path/to/some/files"], listener_extra_args: "--latency=0.0")
+FileSystem.start_link(dirs: ["/path/to/some/files"], latency: 0, watch_root: true)
 ```
-
-See the [fs source](https://github.com/synrc/fs/tree/master/c_src) for more details.
