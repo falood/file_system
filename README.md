@@ -25,7 +25,7 @@ defmodule Excellent.Mixfile do
 
   defp deps do
     [
-      { :file_system, "~> 0.1.0", only: :test },
+      { :file_system, "~> 0.1", only: :test },
     ]
   end
   ...
