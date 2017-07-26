@@ -4,8 +4,7 @@ defmodule FileSystem.Mixfile do
   def project do
     [ app: :file_system,
       version: "0.1.1",
-      elixir: "~> 1.5",
-      compilers: [:elixir, :app],
+      elixir: "~> 1.3",
       deps: deps(),
       description: "A file system change watcher wrapper based on [fs](https://github.com/synrc/fs)",
       source_url: "https://github.com/falood/file_system",
@@ -19,7 +18,7 @@ defmodule FileSystem.Mixfile do
 
   def application do
     [
-      extra_applications: [:logger],
+      applications: [:logger],
     ]
   end
 
