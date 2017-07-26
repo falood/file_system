@@ -30,7 +30,14 @@ defmodule FileSystem.Backends.FSMac do
     exec_file = find_executable()
     unless File.exists?(exec_file) do
       Logger.info "Compiling executable file..."
-      cmd = "clang -framework CoreFoundation -framework CoreServices -Wno-deprecated-declarations c_src/mac/*.c -o #{exec_file}"
+      src_dir =
+        case Mix.Project.config[:app] do
+          :file_system ->
+            "."
+          _ ->
+            Mix.Project.deps_paths[:file_system]
+        end
+      cmd = "clang -framework CoreFoundation -framework CoreServices -Wno-deprecated-declarations #{src_dir}/c_src/mac/*.c -o #{exec_file}"
       if Mix.shell.cmd(cmd) > 0 do
         Logger.error "Compile executable file error, try to run `#{cmd}` manually."
         raise "compile backend error"
