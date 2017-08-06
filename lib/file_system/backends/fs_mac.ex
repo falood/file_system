@@ -21,33 +21,49 @@ defmodule FileSystem.Backends.FSMac do
       https://developer.apple.com/documentation/coreservices/kfseventstreamcreateflagwatchroot
 
     * recursive is enabled by default, no option to disable it for now.
+
+  ## Executable File Path
+
+  The default executable file is `mac_listener` in `priv` dir of `:file_system` application, there're two ways to custom it, useful when run `:file_system` with escript.
+
+    * config with `config.exs`
+      `config :file_system, :fs_mac, executable_file: "YOUR_EXECUTABLE_FILE_PATH"
+
+    * config with `FILESYSTEM_FSMAC_EXECUTABLE_FILE` os environment
+      `FILESYSTEM_FSMAC_EXECUTABLE_FILE=YOUR_EXECUTABLE_FILE_PATH`
   """
 
   use GenServer
   @behaviour FileSystem.Backend
 
   def bootstrap do
-    exec_file = find_executable()
-    unless File.exists?(exec_file) do
-      Logger.info "Compiling executable file..."
-      src_dir =
-        case Mix.Project.config[:app] do
-          :file_system ->
-            "."
-          _ ->
-            Mix.Project.deps_paths[:file_system]
-        end
-      cmd = "clang -framework CoreFoundation -framework CoreServices -Wno-deprecated-declarations #{src_dir}/c_src/mac/*.c -o #{exec_file}"
-      if Mix.shell.cmd(cmd) > 0 do
-        Logger.error "Compile executable file error, try to run `#{cmd}` manually."
-        raise "compile backend error"
-      else
-        Logger.info "Compile executable file, Done."
-      end
+    exec_file = executable_path()
+    cond do
+      is_nil(exec_file) -> {:error, :fs_mac_bootstrap_error}
+      File.exists?(exec_file) -> :ok
+      true -> compile_executable_file(exec_file)
     end
-    :ok
+  end
+
+  defp compile_executable_file(exec_file) do
+    Logger.info "Compiling executable file..."
+    src_dir =
+      case Mix.Project.config[:app] do
+        :file_system -> "."
+        _ -> Mix.Project.deps_paths[:file_system]
+      end
+    cmd = "clang -framework CoreFoundation -framework CoreServices -Wno-deprecated-declarations #{src_dir}/c_src/mac/*.c -o #{exec_file}"
+    if Mix.shell.cmd(cmd) > 0 do
+      Logger.error ~s|Compile executable file error, try to run "#{cmd}" manually.|
+      {:error, :fs_mac_bootstrap_error}
+    else
+      Logger.info "Compile executable file, Done."
+      :ok
+    end
   rescue
-    _ -> {:error, :fs_mac_bootstrap_error}
+    _ ->
+      Logger.error ~s|Automatic compile executable file failed, run "mix file_system.fs_mac init" to compile it manually.|
+      {:error, :fs_mac_bootstrap_error}
   end
 
   def supported_systems do
@@ -61,8 +77,32 @@ defmodule FileSystem.Backends.FSMac do
     ]
   end
 
-  defp find_executable do
-    (:code.priv_dir(:file_system) ++ '/mac_listener') |> to_string
+  defp executable_path do
+    executable_path(:system_env) || executable_path(:config) || executable_path(:priv)
+  end
+
+  defp executable_path(:config) do
+    with config when is_list(config) <- Application.get_env(:file_system, :fs_mac),
+         executable_file when not is_nil(executable_file) <- Keyword.get(config, :executable_file)
+    do
+      executable_file |> to_string
+    else
+      _ -> nil
+    end
+  end
+
+  defp executable_path(:system_env) do
+    System.get_env("FILESYSTEM_FSMAC_EXECUTABLE_FILE")
+  end
+
+  defp executable_path(:priv) do
+    case :code.priv_dir(:file_system) do
+      {:error, _} ->
+        Logger.error "`priv` dir for `:file_system` application is not avalible in current runtime, appoint executable file with `config.exs` or `FILESYSTEM_FSMAC_EXECUTABLE_FILE` env."
+        nil
+      dir when is_list(dir) ->
+        Path.join(dir, "mac_listener")
+    end
   end
 
   def parse_options(options) do
@@ -118,7 +158,7 @@ defmodule FileSystem.Backends.FSMac do
     case parse_options(rest) do
       {:ok, port_args} ->
         port = Port.open(
-          {:spawn_executable, to_charlist(find_executable())},
+          {:spawn_executable, to_charlist(executable_path())},
           [:stream, :exit_status, {:line, 16384}, {:args, port_args}, {:cd, System.tmp_dir!()}]
         )
         Process.link(port)
