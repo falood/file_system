@@ -10,6 +10,16 @@ defmodule FileSystem.Backends.FSInotify do
   ## Backend Options
 
     * `:recursive` (bool, default: true), monitor directories and their contents recursively
+
+  ## Executable File Path
+
+  The default behaivour to find executable file is finding `inotifywait` from `$PATH`, there're two ways to custom it, useful when run `:file_system` with escript.
+
+    * config with `config.exs`
+      `config :file_system, :fs_inotify, executable_file: "YOUR_EXECUTABLE_FILE_PATH"
+
+    * config with `FILESYSTEM_FSINOTIFY_EXECUTABLE_FILE` os environment
+      `FILESYSTEM_FSINOTIFY_EXECUTABLE_FILE=YOUR_EXECUTABLE_FILE_PATH`
   """
 
   use GenServer
@@ -17,9 +27,9 @@ defmodule FileSystem.Backends.FSInotify do
   @sep_char <<1>>
 
   def bootstrap do
-    exec_file = find_executable()
+    exec_file = executable_path()
     if is_nil(exec_file) do
-      Logger.error "`inotify-tools` is needed to run `file_system` for your system, check https://github.com/rvoicilas/inotify-tools/wiki for more information about how to install it."
+      Logger.error "`inotify-tools` is needed to run `file_system` for your system, check https://github.com/rvoicilas/inotify-tools/wiki for more information about how to install it. If it's already installed but not be found, appoint executable file with `config.exs` or `FILESYSTEM_FSINOTIFY_EXECUTABLE_FILE` env."
       {:error, :fs_inotify_bootstrap_error}
     else
       :ok
@@ -34,7 +44,25 @@ defmodule FileSystem.Backends.FSInotify do
     [:created, :deleted, :renamed, :closed, :modified, :isdir, :attribute, :undefined]
   end
 
-  defp find_executable do
+  defp executable_path do
+    executable_path(:system_env) || executable_path(:config) || executable_path(:system_path)
+  end
+
+  defp executable_path(:config) do
+    with config when is_list(config) <- Application.get_env(:file_system, :fs_mac),
+         executable_file when not is_nil(executable_file) <- Keyword.get(config, :executable_file)
+    do
+      executable_file |> to_string
+    else
+      _ -> nil
+    end
+  end
+
+  defp executable_path(:system_env) do
+    System.get_env("FILESYSTEM_FSINOTIFY_EXECUTABLE_FILE")
+  end
+
+  defp executable_path(:system_path) do
     System.find_executable("inotifywait")
   end
 
@@ -79,7 +107,7 @@ defmodule FileSystem.Backends.FSInotify do
     case parse_options(rest) do
       {:ok, port_args} ->
         port = Port.open(
-          {:spawn_executable, to_charlist(find_executable())},
+          {:spawn_executable, to_charlist(executable_path())},
           [:stream, :exit_status, {:line, 16384}, {:args, port_args}, {:cd, System.tmp_dir!()}]
         )
         Process.link(port)
