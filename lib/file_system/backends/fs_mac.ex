@@ -27,10 +27,10 @@ defmodule FileSystem.Backends.FSMac do
   The default executable file is `mac_listener` in `priv` dir of `:file_system` application, there're two ways to custom it, useful when run `:file_system` with escript.
 
     * config with `config.exs`
-      `config :file_system, :fs_mac, executable_file: "YOUR_EXECUTABLE_FILE_PATH"
+      `config :file_system, :fs_mac, executable_file: "YOUR_EXECUTABLE_FILE_PATH"`
 
     * config with `FILESYSTEM_FSMAC_EXECUTABLE_FILE` os environment
-      `FILESYSTEM_FSMAC_EXECUTABLE_FILE=YOUR_EXECUTABLE_FILE_PATH`
+      FILESYSTEM_FSMAC_EXECUTABLE_FILE=YOUR_EXECUTABLE_FILE_PATH
   """
 
   use GenServer

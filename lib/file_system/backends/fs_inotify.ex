@@ -16,10 +16,10 @@ defmodule FileSystem.Backends.FSInotify do
   The default behaivour to find executable file is finding `inotifywait` from `$PATH`, there're two ways to custom it, useful when run `:file_system` with escript.
 
     * config with `config.exs`
-      `config :file_system, :fs_inotify, executable_file: "YOUR_EXECUTABLE_FILE_PATH"
+      `config :file_system, :fs_inotify, executable_file: "YOUR_EXECUTABLE_FILE_PATH"`
 
     * config with `FILESYSTEM_FSINOTIFY_EXECUTABLE_FILE` os environment
-      `FILESYSTEM_FSINOTIFY_EXECUTABLE_FILE=YOUR_EXECUTABLE_FILE_PATH`
+      FILESYSTEM_FSINOTIFY_EXECUTABLE_FILE=YOUR_EXECUTABLE_FILE_PATH
   """
 
   use GenServer

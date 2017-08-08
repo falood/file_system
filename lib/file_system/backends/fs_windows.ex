@@ -16,10 +16,10 @@ defmodule FileSystem.Backends.FSWindows do
   The default executable file is `inotifywait.exe` in `priv` dir of `:file_system` application, there're two ways to custom it, useful when run `:file_system` with escript.
 
     * config with `config.exs`
-      `config :file_system, :fs_windows, executable_file: "YOUR_EXECUTABLE_FILE_PATH"
+      `config :file_system, :fs_windows, executable_file: "YOUR_EXECUTABLE_FILE_PATH"`
 
     * config with `FILESYSTEM_FSWINDOWS_EXECUTABLE_FILE` os environment
-      `FILESYSTEM_FSWINDOWS_EXECUTABLE_FILE=YOUR_EXECUTABLE_FILE_PATH`
+      FILESYSTEM_FSWINDOWS_EXECUTABLE_FILE=YOUR_EXECUTABLE_FILE_PATH
   """
 
   use GenServer
