@@ -10,6 +10,16 @@ defmodule FileSystem.Backends.FSWindows do
   ## Backend Options
 
     * `:recursive` (bool, default: true), monitor directories and their contents recursively
+
+  ## Executable File Path
+
+  The default executable file is `inotifywait.exe` in `priv` dir of `:file_system` application, there're two ways to custom it, useful when run `:file_system` with escript.
+
+    * config with `config.exs`
+      `config :file_system, :fs_windows, executable_file: "YOUR_EXECUTABLE_FILE_PATH"
+
+    * config with `FILESYSTEM_FSWINDOWS_EXECUTABLE_FILE` os environment
+      `FILESYSTEM_FSWINDOWS_EXECUTABLE_FILE=YOUR_EXECUTABLE_FILE_PATH`
   """
 
   use GenServer
@@ -17,11 +27,11 @@ defmodule FileSystem.Backends.FSWindows do
   @sep_char <<1>>
 
   def bootstrap do
-    exec_file = find_executable()
-    if File.exists?(exec_file) do
+    exec_file = executable_path()
+    if not is_nil(exec_file) and File.exists?(exec_file) do
       :ok
     else
-      Logger.error "Can't find executable `inotifywait.exe`, make sure the file is in your priv dir."
+      Logger.error "Can't find executable `inotifywait.exe`"
       {:error, :fs_windows_bootstrap_error}
     end
   end
@@ -34,9 +44,34 @@ defmodule FileSystem.Backends.FSWindows do
     [:created, :modified, :removed, :renamed, :undefined]
   end
 
-  defp find_executable do
-    (:code.priv_dir(:file_system) ++ '/inotifywait.exe') |> to_string
+  defp executable_path do
+    executable_path(:system_env) || executable_path(:config) || executable_path(:priv)
   end
+
+  defp executable_path(:config) do
+    with config when is_list(config) <- Application.get_env(:file_system, :fs_windows),
+         executable_file when not is_nil(executable_file) <- Keyword.get(config, :executable_file)
+    do
+      executable_file |> to_string
+    else
+      _ -> nil
+    end
+  end
+
+  defp executable_path(:system_env) do
+    System.get_env("FILESYSTEM_FSMWINDOWS_EXECUTABLE_FILE")
+  end
+
+  defp executable_path(:priv) do
+    case :code.priv_dir(:file_system) do
+      {:error, _} ->
+        Logger.error "`priv` dir for `:file_system` application is not avalible in current runtime, appoint executable file with `config.exs` or `FILESYSTEM_FSWINDOWS_EXECUTABLE_FILE` env."
+        nil
+      dir when is_list(dir) ->
+        Path.join(dir, "inotifywait.exe")
+    end
+  end
+
 
   def parse_options(options) do
     case Keyword.pop(options, :dirs) do
@@ -78,7 +113,7 @@ defmodule FileSystem.Backends.FSWindows do
     case parse_options(rest) do
       {:ok, port_args} ->
         port = Port.open(
-          {:spawn_executable, to_charlist(find_executable())},
+          {:spawn_executable, to_charlist(executable_path())},
           [:stream, :exit_status, {:line, 16384}, {:args, port_args}, {:cd, System.tmp_dir!()}]
         )
         Process.link(port)
