@@ -36,6 +36,8 @@ defmodule FileSystem.Backends.FSMac do
   use GenServer
   @behaviour FileSystem.Backend
 
+  @default_exec_file "mac_listener"
+
   def bootstrap do
     exec_file = executable_path()
     cond do
@@ -78,7 +80,7 @@ defmodule FileSystem.Backends.FSMac do
   end
 
   defp executable_path do
-    executable_path(:system_env) || executable_path(:config) || executable_path(:priv)
+    executable_path(:system_env) || executable_path(:config) || executable_path(:system_path) || executable_path(:priv)
   end
 
   defp executable_path(:config) do
@@ -95,13 +97,17 @@ defmodule FileSystem.Backends.FSMac do
     System.get_env("FILESYSTEM_FSMAC_EXECUTABLE_FILE")
   end
 
+  defp executable_path(:system_path) do
+    System.find_executable(@default_exec_file)
+  end
+
   defp executable_path(:priv) do
     case :code.priv_dir(:file_system) do
       {:error, _} ->
         Logger.error "`priv` dir for `:file_system` application is not avalible in current runtime, appoint executable file with `config.exs` or `FILESYSTEM_FSMAC_EXECUTABLE_FILE` env."
         nil
       dir when is_list(dir) ->
-        Path.join(dir, "mac_listener")
+        Path.join(dir, @default_exec_file)
     end
   end
 
