@@ -26,6 +26,8 @@ defmodule FileSystem.Backends.FSWindows do
   @behaviour FileSystem.Backend
   @sep_char <<1>>
 
+  @default_exec_file "inotifywait.exe"
+
   def bootstrap do
     exec_file = executable_path()
     if not is_nil(exec_file) and File.exists?(exec_file) do
@@ -45,7 +47,7 @@ defmodule FileSystem.Backends.FSWindows do
   end
 
   defp executable_path do
-    executable_path(:system_env) || executable_path(:config) || executable_path(:priv)
+    executable_path(:system_env) || executable_path(:config) || executable_path(:system_path) || executable_path(:priv)
   end
 
   defp executable_path(:config) do
@@ -62,16 +64,19 @@ defmodule FileSystem.Backends.FSWindows do
     System.get_env("FILESYSTEM_FSMWINDOWS_EXECUTABLE_FILE")
   end
 
+  defp executable_path(:system_path) do
+    System.find_executable(@default_exec_file)
+  end
+
   defp executable_path(:priv) do
     case :code.priv_dir(:file_system) do
       {:error, _} ->
         Logger.error "`priv` dir for `:file_system` application is not avalible in current runtime, appoint executable file with `config.exs` or `FILESYSTEM_FSWINDOWS_EXECUTABLE_FILE` env."
         nil
       dir when is_list(dir) ->
-        Path.join(dir, "inotifywait.exe")
+        Path.join(dir, @default_exec_file)
     end
   end
-
 
   def parse_options(options) do
     case Keyword.pop(options, :dirs) do
