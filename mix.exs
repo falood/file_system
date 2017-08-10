@@ -39,12 +39,20 @@ defmodule FileSystem.Mixfile do
 
   defp compile_mac do
     require Logger
-    Logger.info "Compiling file system watcher for Mac..."
-    cmd = "clang -framework CoreFoundation -framework CoreServices -Wno-deprecated-declarations c_src/mac/*.c -o priv/mac_listener"
-    if Mix.shell.cmd(cmd) > 0 do
-      Logger.error "Could not compile file system watcher for Mac, try to run #{inspect cmd} manually inside the dependnecy."
+    source = "c_src/mac/*.c"
+    target = "priv/mac_listener"
+
+    if Mix.Utils.stale?(Path.wildcard(source), [target]) do
+      Logger.info "Compiling file system watcher for Mac..."
+      cmd = "clang -framework CoreFoundation -framework CoreServices -Wno-deprecated-declarations #{source} -o #{target}"
+      if Mix.shell.cmd(cmd) > 0 do
+        Logger.error "Could not compile file system watcher for Mac, try to run #{inspect cmd} manually inside the dependnecy."
+      else
+        Logger.info "Done."
+      end
+      :ok
     else
-      Logger.info "Done."
+      :noop
     end
   end
 
