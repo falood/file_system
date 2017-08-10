@@ -136,7 +136,7 @@ defmodule FileSystem.Backends.FSWindows do
 
   def handle_info({:EXIT, port, _reason}, %{port: port}=state) do
     send(state.worker_pid, {:backend_file_event, self(), :stop})
-    {:noreply, state}
+    {:stop, :normal, state}
   end
 
   def handle_info(_, state) do
