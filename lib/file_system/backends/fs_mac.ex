@@ -40,32 +40,12 @@ defmodule FileSystem.Backends.FSMac do
 
   def bootstrap do
     exec_file = executable_path()
-    cond do
-      is_nil(exec_file) -> {:error, :fs_mac_bootstrap_error}
-      File.exists?(exec_file) -> :ok
-      true -> compile_executable_file(exec_file)
-    end
-  end
-
-  defp compile_executable_file(exec_file) do
-    Logger.info "Compiling executable file..."
-    src_dir =
-      case Mix.Project.config[:app] do
-        :file_system -> "."
-        _ -> Mix.Project.deps_paths[:file_system]
-      end
-    cmd = "clang -framework CoreFoundation -framework CoreServices -Wno-deprecated-declarations #{src_dir}/c_src/mac/*.c -o #{exec_file}"
-    if Mix.shell.cmd(cmd) > 0 do
-      Logger.error ~s|Compile executable file error, try to run "#{cmd}" manually.|
-      {:error, :fs_mac_bootstrap_error}
-    else
-      Logger.info "Compile executable file, Done."
+    if not is_nil(exec_file) and File.exists?(exec_file) do
       :ok
-    end
-  rescue
-    _ ->
-      Logger.error ~s|Automatic compile executable file failed, run "mix file_system.fs_mac init" to compile it manually.|
+    else
+      Logger.error "Can't find executable `mac_listener`"
       {:error, :fs_mac_bootstrap_error}
+    end
   end
 
   def supported_systems do
@@ -84,13 +64,7 @@ defmodule FileSystem.Backends.FSMac do
   end
 
   defp executable_path(:config) do
-    with config when is_list(config) <- Application.get_env(:file_system, :fs_mac),
-         executable_file when not is_nil(executable_file) <- Keyword.get(config, :executable_file)
-    do
-      executable_file |> to_string
-    else
-      _ -> nil
-    end
+    Application.get_env(:file_system, :fs_mac)[:executable_file]
   end
 
   defp executable_path(:system_env) do
