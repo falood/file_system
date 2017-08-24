@@ -149,7 +149,7 @@ defmodule FileSystem.Backends.FSWindows do
         [dir, flags, file] -> {Enum.join([dir, file], "\\"), flags}
         [path, flags]      -> {path, flags}
       end
-    {path, flags |> String.split(",") |> Enum.map(&convert_flag/1)}
+    {path |> Path.split() |> Path.join(), flags |> String.split(",") |> Enum.map(&convert_flag/1)}
   end
 
   defp convert_flag("CREATE"),   do: :created
