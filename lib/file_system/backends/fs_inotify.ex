@@ -106,9 +106,10 @@ defmodule FileSystem.Backends.FSInotify do
     {worker_pid, rest} = Keyword.pop(args, :worker_pid)
     case parse_options(rest) do
       {:ok, port_args} ->
+        bash_args = ['-c', to_charlist(executable_path()) ++ ' $0 $@ & PID=$!; read a; kill $PID']
         port = Port.open(
-          {:spawn_executable, to_charlist(executable_path())},
-          [:stream, :exit_status, {:line, 16384}, {:args, port_args}, {:cd, System.tmp_dir!()}]
+          {:spawn_executable, '/bin/sh'},
+          [:stream, :exit_status, {:line, 16384}, {:args, bash_args ++ port_args}, {:cd, System.tmp_dir!()}]
         )
         Process.link(port)
         Process.flag(:trap_exit, true)
