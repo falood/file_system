@@ -24,7 +24,7 @@ defmodule FileSystem.Backends.FSInotifyTest do
       assert {:ok, ['-e', 'modify', '-e', 'close_write', '-e', 'moved_to', '-e', 'create', '-e',
                     'delete', '-e', 'attrib', '--format', [37, 119, 1, 37, 101, 1, 37, 102],
                     '--quiet', '-m', '/tmp']} ==
-        parse_options(dirs: ["/tmp"], recursive: false, unsuppported: :options)
+        parse_options(dirs: ["/tmp"], recursive: false, unsupported: :options)
     end
   end
 
