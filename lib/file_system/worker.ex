@@ -39,7 +39,7 @@ defmodule FileSystem.Worker do
     {:noreply, state}
   end
 
-  def handle_info({:DOWN, _pid, _, ref, _reason}, state) do
+  def handle_info({:DOWN, ref, _, _pid, _reason}, state) do
     subscribers = Map.drop(state.subscribers, [ref])
     {:noreply, %{state | subscribers: subscribers}}
   end
