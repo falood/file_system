@@ -50,7 +50,7 @@ defmodule FileSystem.Backends.FSPoll do
   end
 
   def handle_info(:check, {worker_pid, dirs, interval, stale_mtimes}) do
-    fresh_mtimes = files_mtimes(dirs) |> IO.inspect
+    fresh_mtimes = files_mtimes(dirs)
 
     diff(stale_mtimes, fresh_mtimes)
     |> Tuple.to_list
