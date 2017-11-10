@@ -39,6 +39,7 @@ defmodule FileSystem.Backends.FSPoll do
     {interval, rest} = Keyword.pop(rest, :interval, 1000)
     {dirs, _unknown_opts} = Keyword.pop(rest, :dirs)
 
+    Logger.info("Polling file changes every #{interval}ms...")
     send(self(), :first_check)
 
     {:ok, {worker_pid, dirs, interval, %{}}}
