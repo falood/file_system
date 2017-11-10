@@ -4,7 +4,7 @@ defmodule FileSystem do
   @doc """
   ## Options
 
-    * `:dirs` ([string], requires), the dir list to monitor
+    * `:dirs` ([string], required), the dir list to monitor
 
     * `:backend` (atom, optional), default backends: `:fs_mac`
       for `macos`, `:fs_inotify` for `linux` and `freebsd`,
