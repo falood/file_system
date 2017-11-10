@@ -45,7 +45,7 @@ defmodule FileSystem do
       {:file_event, worker_pid, {file_path, events}}
       {:file_event, worker_pid, :stop}
   """
-  @spec subscribe(pid() | atom()) :: :ok
+  @spec subscribe(GenServer.server) :: :ok
   def subscribe(pid) do
     GenServer.call(pid, :subscribe)
   end
