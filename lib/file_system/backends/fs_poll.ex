@@ -97,9 +97,9 @@ defmodule FileSystem.Backends.FSPoll do
     {created_file_paths, deleted_file_paths, modified_file_paths}
   end
 
-  defp report_change({file_paths, status}, worker_pid) do
+  defp report_change({file_paths, event}, worker_pid) do
     for file_path <- file_paths do
-      send(worker_pid, {:backend_file_event, self(), {file_path, [status]}})
+      send(worker_pid, {:backend_file_event, self(), {file_path, [event]}})
     end
   end
 end
