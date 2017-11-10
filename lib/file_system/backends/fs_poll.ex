@@ -36,7 +36,7 @@ defmodule FileSystem.Backends.FSPoll do
 
   def init(args) do
     {worker_pid, rest} = Keyword.pop(args, :worker_pid)
-    {interval, rest} = Keyword.pop(rest, :interval)
+    {interval, rest} = Keyword.pop(rest, :interval, 1000)
     {dirs, _unknown_opts} = Keyword.pop(rest, :dirs)
 
     send(self(), :first_check)
