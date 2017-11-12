@@ -82,6 +82,7 @@ defmodule FileSystem.Backends.FSPoll do
     end)
   end
 
+  @doc false
   def diff(stale_mtimes, fresh_mtimes) do
     fresh_file_paths = fresh_mtimes |> Map.keys |> MapSet.new
     stale_file_paths = stale_mtimes |> Map.keys |> MapSet.new
