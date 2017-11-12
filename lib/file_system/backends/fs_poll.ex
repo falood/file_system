@@ -73,7 +73,7 @@ defmodule FileSystem.Backends.FSPoll do
           Map.put(map, dir, mtime)
         %{type: :directory} ->
           dir
-          |> Path.join("**/*")
+          |> Path.join("*")
           |> Path.wildcard
           |> files_mtimes(map)
         %{type: _other} ->
