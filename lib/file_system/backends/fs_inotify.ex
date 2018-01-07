@@ -74,8 +74,8 @@ defmodule FileSystem.Backends.FSInotify do
       {dirs, rest} ->
         format = ["%w", "%e", "%f"] |> Enum.join(@sep_char) |> to_charlist
         args = [
-          '-e', 'modify', '-e', 'close_write', '-e', 'moved_to', '-e', 'create',
-          '-e', 'delete', '-e', 'attrib', '--format', format, '--quiet', '-m', '-r'
+          '-e', 'modify', '-e', 'close_write', '-e', 'moved_to', '-e', 'moved_from',
+          '-e', 'create', '-e', 'delete', '-e', 'attrib', '--format', format, '--quiet', '-m', '-r'
           | dirs |> Enum.map(&Path.absname/1) |> Enum.map(&to_charlist/1)
         ]
         parse_options(rest, args)
@@ -150,6 +150,7 @@ defmodule FileSystem.Backends.FSInotify do
 
   defp convert_flag("CREATE"),      do: :created
   defp convert_flag("DELETE"),      do: :deleted
+  defp convert_flag("MOVE_FROM"),   do: :deleted
   defp convert_flag("ISDIR"),       do: :isdir
   defp convert_flag("MODIFY"),      do: :modified
   defp convert_flag("CLOSE_WRITE"), do: :modified
