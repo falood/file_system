@@ -17,18 +17,15 @@ defmodule FileSystem.Backends.FSPollTest do
 
   describe "diff" do
     test "detect created file" do
-      {created, _, _} = diff(@stale, @fresh)
-      created = ["created"]
-    end
-
-    test "detect modified file" do
-      {_, modified, _} = diff(@stale, @fresh)
-      modified = ["modified"]
+      assert {["created"], _, _} = diff(@stale, @fresh)
     end
 
     test "detect deleted file" do
-      {_, _, deleted} = diff(@stale, @fresh)
-      deleted = ["deleted"]
+      assert {_, ["deleted"], _} = diff(@stale, @fresh)
+    end
+
+    test "detect modified file" do
+      assert {_, _, ["modified"]} = diff(@stale, @fresh)
     end
   end
 end
