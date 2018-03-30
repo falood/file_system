@@ -6,10 +6,10 @@ A file change watcher wrapper based on [fs](https://github.com/synrc/fs)
 ## System Support
 
 - Mac fsevent
-- Linux and FreeBSD inotify
+- Linux, FreeBSD and OpenBSD inotify
 - Windows inotify-win
 
-NOTE: On Linux and FreeBSD you need to install inotify-tools.
+NOTE: On Linux, FreeBSD and OpenBSD you need to install inotify-tools.
 
 ## Usage
 

@@ -3,7 +3,7 @@ require Logger
 defmodule FileSystem.Backends.FSInotify do
   @moduledoc """
   This file is a fork from https://github.com/synrc/fs.
-  FileSysetm backend for linux and freebsd, a GenServer receive data from Port, parse event
+  FileSysetm backend for linux, freebsd and openbsd, a GenServer receive data from Port, parse event
   and send it to the worker process.
   Need `inotify-tools` installed to use this backend.
 
@@ -37,7 +37,7 @@ defmodule FileSystem.Backends.FSInotify do
   end
 
   def supported_systems do
-    [{:unix, :linux}, {:unix, :freebsd}]
+    [{:unix, :linux}, {:unix, :freebsd}, {:unix, :openbsd}]
   end
 
   def known_events do
