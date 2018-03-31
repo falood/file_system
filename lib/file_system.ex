@@ -7,7 +7,7 @@ defmodule FileSystem do
     * `:dirs` ([string], required), the dir list to monitor
 
     * `:backend` (atom, optional), default backends: `:fs_mac`
-      for `macos`, `:fs_inotify` for `linux` and `freebsd`,
+      for `macos`, `:fs_inotify` for `linux`, `freebsd` and `openbsd`,
       `:fs_windows` for `windows`
 
     * `:name` (atom, optional), `name` can be used to subscribe as
