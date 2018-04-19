@@ -33,7 +33,7 @@ defmodule FileSystem do
       iex> FileSystem.start_link(backend: :fs_mac, dirs: ["/tmp/fs"], name: :worker)
       iex> FileSystem.subscribe(:worker)
   """
-  @spec start_link(Keyword.t) :: {:ok, pid}
+  @spec start_link(Keyword.t) :: GenServer.on_start()
   def start_link(options) do
     FileSystem.Worker.start_link(options)
   end
