@@ -170,7 +170,7 @@ defmodule FileSystem.Backends.FSMac do
   end
 
   def parse_line(line) do
-    [_, _, events, path] = line |> to_string |> String.split(["\t", "="])
+    [_, _, events, path] = line |> to_string |> String.split(["\t", "="], parts: 4)
     {path, events |> String.split(~w|[ , ]|, trim: true) |> Enum.map(&String.to_existing_atom/1)}
   end
 
