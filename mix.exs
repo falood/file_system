@@ -3,7 +3,7 @@ defmodule FileSystem.Mixfile do
 
   def project do
     [ app: :file_system,
-      version: "0.2.4",
+      version: "0.2.5",
       elixir: "~> 1.3",
       deps: deps(),
       description: "A file system change watcher wrapper based on [fs](https://github.com/synrc/fs)",
