@@ -16,7 +16,7 @@ defmodule FileSystem.Backend do
   When a custom module is given, make sure `start_link/1`, `bootstrap/0` and
   `supported_system/0` are defnied.
   """
-  @spec backend(:atom) :: {:ok, atom()} | {:error, atom()}
+  @spec backend(atom) :: {:ok, atom()} | {:error, atom()}
   def backend(backend) do
     with {:ok, module} <- backend_module(backend),
          :ok <- validate_os(backend, module),
