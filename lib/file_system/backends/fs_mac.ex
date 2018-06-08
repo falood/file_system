@@ -120,6 +120,9 @@ defmodule FileSystem.Backends.FSMac do
   defp parse_options([{:with_root, true} | t], result) do
     parse_options(t, ['--with-root' | result])
   end
+  defp parse_options([{:with_root, false} | t], result) do
+    parse_options(t, result)
+  end
   defp parse_options([{:with_root, value} | t], result) do
     Logger.error "unknown value `#{inspect value}` for with_root, ignore"
     parse_options(t, result)
