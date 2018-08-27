@@ -46,7 +46,7 @@ defmodule FileSystem.Mixfile do
       Logger.info "Compiling file system watcher for Mac..."
       cmd = "clang -framework CoreFoundation -framework CoreServices -Wno-deprecated-declarations #{source} -o #{target}"
       if Mix.shell.cmd(cmd) > 0 do
-        Logger.error "Could not compile file system watcher for Mac, try to run #{inspect cmd} manually inside the dependnecy."
+        Logger.error "Could not compile file system watcher for Mac, try to run #{inspect cmd} manually inside the dependency."
       else
         Logger.info "Done."
       end
