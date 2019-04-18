@@ -9,7 +9,10 @@ A file change watcher wrapper based on [fs](https://github.com/synrc/fs)
 - Linux, FreeBSD and OpenBSD inotify
 - Windows inotify-win
 
-NOTE: On Linux, FreeBSD and OpenBSD you need to install inotify-tools.
+NOTE:
+
+        On Linux, FreeBSD and OpenBSD you need to install inotify-tools.
+        On Macos 10.14, you need run `open /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10.14.pkg` to compile `mac_listener`.
 
 ## Usage
 
