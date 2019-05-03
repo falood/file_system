@@ -49,13 +49,7 @@ defmodule FileSystem.Backends.FSInotify do
   end
 
   defp executable_path(:config) do
-    with config when is_list(config) <- Application.get_env(:file_system, :fs_mac),
-         executable_file when not is_nil(executable_file) <- Keyword.get(config, :executable_file)
-    do
-      executable_file |> to_string
-    else
-      _ -> nil
-    end
+    Application.get_env(:file_system, :fs_inotify)[:executable_file]
   end
 
   defp executable_path(:system_env) do
