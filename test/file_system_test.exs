@@ -22,7 +22,7 @@ defmodule FileSystemTest do
     File.touch("#{tmp_dir}/b")
     assert_receive {:file_event, ^pid, {_path, _events}}, 5000
 
-    Port.list
+    Port.list()
     |> Enum.reject(fn port ->
       :undefined == port |> Port.info |> Access.get(:os_pid)
     end)

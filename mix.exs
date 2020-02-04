@@ -9,7 +9,7 @@ defmodule FileSystem.Mixfile do
       description: "A file system change watcher wrapper based on [fs](https://github.com/synrc/fs)",
       source_url: "https://github.com/falood/file_system",
       package: package(),
-      compilers: [:file_system | Mix.compilers],
+      compilers: [:file_system | Mix.compilers()],
       aliases: ["compile.file_system": &file_system/1],
       docs: [
         extras: ["README.md"],
@@ -31,7 +31,7 @@ defmodule FileSystem.Mixfile do
   end
 
   defp file_system(_args) do
-    case :os.type do
+    case :os.type() do
       {:unix, :darwin} -> compile_mac()
       _ -> :ok
     end
@@ -45,7 +45,7 @@ defmodule FileSystem.Mixfile do
     if Mix.Utils.stale?(Path.wildcard(source), [target]) do
       Logger.info "Compiling file system watcher for Mac..."
       cmd = "clang -framework CoreFoundation -framework CoreServices -Wno-deprecated-declarations #{source} -o #{target}"
-      if Mix.shell.cmd(cmd) > 0 do
+      if Mix.shell().cmd(cmd) > 0 do
         Logger.error "Could not compile file system watcher for Mac, try to run #{inspect cmd} manually inside the dependency."
       else
         Logger.info "Done."
