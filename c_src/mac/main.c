@@ -85,7 +85,7 @@ static inline void parse_cli_settings(int argc, const char* argv[])
   }
 
   if (args_info.ignore_self_flag) {
-    if ((osMajorVersion == 10) & (osMinorVersion >= 6)) {
+    if ((osMajorVersion == 11) | (osMajorVersion == 10) & (osMinorVersion >= 6)) {
       config.flags |= kFSEventStreamCreateFlagIgnoreSelf;
     } else {
       fprintf(stderr, "MacOSX 10.6 or later is required for --ignore-self\n");
@@ -94,7 +94,7 @@ static inline void parse_cli_settings(int argc, const char* argv[])
   }
 
   if (args_info.file_events_flag) {
-    if ((osMajorVersion == 10) & (osMinorVersion >= 7)) {
+    if ((osMajorVersion == 11) | (osMajorVersion == 10) & (osMinorVersion >= 7)) {
       config.flags |= kFSEventStreamCreateFlagFileEvents;
     } else {
       fprintf(stderr, "MacOSX 10.7 or later required for --file-events\n");
@@ -103,7 +103,7 @@ static inline void parse_cli_settings(int argc, const char* argv[])
   }
 
   if (args_info.mark_self_flag) {
-    if ((osMajorVersion == 10) & (osMinorVersion >= 9)) {
+    if ((osMajorVersion == 11) | (osMajorVersion == 10) & (osMinorVersion >= 9)) {
       config.flags |= kFSEventStreamCreateFlagMarkSelf;
     } else {
       fprintf(stderr, "MacOSX 10.9 or later required for --mark-self\n");
