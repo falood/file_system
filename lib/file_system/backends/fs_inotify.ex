@@ -101,7 +101,7 @@ defmodule FileSystem.Backends.FSInotify do
 
     case parse_options(rest) do
       {:ok, port_args} ->
-        bash_args = ['-c', '#{executable_path()} $0 $@ & PID=$!; read a; kill -KILL $PID']
+        bash_args = ['-c', '#{executable_path()} "$0" "$@" & PID=$!; read a; kill -KILL $PID']
 
         all_args =
           case :os.type() do
