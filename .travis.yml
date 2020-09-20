@@ -26,6 +26,11 @@ matrix:
       otp_release: 20.0
       elixir: 1.5.0
 
+    - os: linux
+      sudo: required
+      otp_release: 23.0
+      elixir: 1.10.4
+
 notifications:
   recipients:
     - self@falood.me
