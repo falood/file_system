@@ -42,12 +42,12 @@ defmodule FileSystem.Backends.FSInotifyTest do
     end
 
     test "dir moved to" do
-      assert {"/one/two/file", [:renamed]} ==
+      assert {"/one/two/file", [:moved_to]} ==
         ~w|/one/two/ MOVED_TO file| |> to_port_line |> parse_line
     end
 
     test "dir moved from" do
-      assert {"/one/two/file", [:deleted]} ==
+      assert {"/one/two/file", [:moved_from]} ==
         ~w|/one/two/ MOVED_FROM file| |> to_port_line |> parse_line
     end
 

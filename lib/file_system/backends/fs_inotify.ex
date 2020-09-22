@@ -157,9 +157,9 @@ defmodule FileSystem.Backends.FSInotify do
   end
 
   defp convert_flag("CREATE"),      do: :created
-  defp convert_flag("MOVED_TO"),    do: :renamed
+  defp convert_flag("MOVED_TO"),    do: :moved_to
   defp convert_flag("DELETE"),      do: :deleted
-  defp convert_flag("MOVED_FROM"),  do: :deleted
+  defp convert_flag("MOVED_FROM"),  do: :moved_from
   defp convert_flag("ISDIR"),       do: :isdir
   defp convert_flag("MODIFY"),      do: :modified
   defp convert_flag("CLOSE_WRITE"), do: :modified
