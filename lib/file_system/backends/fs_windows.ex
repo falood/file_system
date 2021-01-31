@@ -2,10 +2,11 @@ require Logger
 
 defmodule FileSystem.Backends.FSWindows do
   @moduledoc """
-  This file is a fork from https://github.com/synrc/fs.
-  FileSysetm backend for windows, a GenServer receive data from Port, parse event
-  and send it to the worker process.
+  File system backend for Windows.
+
   Need binary executable file packaged in to use this backend.
+
+  This file is a fork from https://github.com/synrc/fs.
 
   ## Backend Options
 
@@ -13,13 +14,25 @@ defmodule FileSystem.Backends.FSWindows do
 
   ## Executable File Path
 
-  The default executable file is `inotifywait.exe` in `priv` dir of `:file_system` application, there're two ways to custom it, useful when run `:file_system` with escript.
+  Useful when running `:file_system` with escript.
 
-    * config with `config.exs`
-      `config :file_system, :fs_windows, executable_file: "YOUR_EXECUTABLE_FILE_PATH"`
+  The default listener executable file is `priv/inotifywait.exe` within the
+  folder of `:file_system` application.
 
-    * config with `FILESYSTEM_FSWINDOWS_EXECUTABLE_FILE` os environment
-      FILESYSTEM_FSWINDOWS_EXECUTABLE_FILE=YOUR_EXECUTABLE_FILE_PATH
+  Two ways to customize the executable file path:
+
+    * Module config with `config.exs`:
+
+      ```elixir
+      config :file_system, :fs_windows,
+        executable_file: "YOUR_EXECUTABLE_FILE_PATH"`
+      ```
+
+    * System environment variable:
+
+      ```
+      export FILESYSTEM_FSWINDOWS_EXECUTABLE_FILE="YOUR_EXECUTABLE_FILE_PATH"`
+      ```
   """
 
   use GenServer

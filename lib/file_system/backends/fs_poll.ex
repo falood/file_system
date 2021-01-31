@@ -2,14 +2,13 @@ require Logger
 
 defmodule FileSystem.Backends.FSPoll do
   @moduledoc """
-  FileSysetm backend for any OS, a GenServer that regularly scans file system to
-  detect changes and send them to the worker process.
+  File system backend for any OS.
 
   ## Backend Options
 
     * `:interval` (integer, default: 1000), polling interval
 
-  ## Use FSPoll Backend
+  ## Using FSPoll Backend
 
   Unlike other backends, polling backend is never automatically chosen in any
   OS environment, despite being usable on all platforms.
