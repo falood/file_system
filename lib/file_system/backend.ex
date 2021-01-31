@@ -2,7 +2,7 @@ require Logger
 
 defmodule FileSystem.Backend do
   @moduledoc """
-  FileSystem Backend Behaviour.
+  A behaviour module for implementing different file system backend.
   """
 
   @callback bootstrap() :: :ok | {:error, atom()}
@@ -10,9 +10,13 @@ defmodule FileSystem.Backend do
   @callback known_events() :: [atom()]
 
   @doc """
-  Get and validate backend module, return `{:ok, backend_module}` when success and
-  return `{:error, reason}` when fail.
-  When `nil` is given, will return default backend by os.
+  Get and validate backend module.
+
+  Returns `{:ok, backend_module}` upon success and `{:error, reason}` upon
+  failure.
+
+  When `nil` is given, will return default backend by OS.
+
   When a custom module is given, make sure `start_link/1`, `bootstrap/0` and
   `supported_system/0` are defnied.
   """

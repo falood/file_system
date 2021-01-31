@@ -1,37 +1,45 @@
 defmodule FileSystem do
-  @moduledoc File.read!("README.md")
+  @moduledoc """
+  A `GenServer` process to watch file system changes.
+
+  The process receives data from Port, parse event, and send it to the worker
+  process.
+  """
 
   @doc """
+  Starts a `GenServer` process and linked to the current process.
+
   ## Options
 
-    * `:dirs` ([string], required), the dir list to monitor
+    * `:dirs` ([string], required), the list of directory to monitor.
 
-    * `:backend` (atom, optional), default backends: `:fs_mac`
-      for `macos`, `:fs_inotify` for `linux`, `freebsd` and `openbsd`,
-      `:fs_windows` for `windows`
+    * `:backend` (atom, optional), default backends: `:fs_mac`. Available
+      backends: `:fs_mac`, `:fs_inotify`, and `:fs_windows`.
 
-    * `:name` (atom, optional), `name` can be used to subscribe as
-      the same as pid when the `name` is given. The `name` should
-      be the name of worker process.
+    * `:name` (atom, optional), the `name` of the worker process to subscribe
+      to the file system listerner. Alternative to using `pid` of the worker
+      process.
 
-    * All rest options will treated as backend options. See backend
-      module documents for more details.
+    * Additional backend implementation options. See backend module documents
+      for more details.
 
-  ## Example
+  ## Examples
 
-  Simple usage:
+  Start monitoring `/tmp/fs` directory using the default `:fs_mac` backend of
+  the current process:
 
       iex> {:ok, pid} = FileSystem.start_link(dirs: ["/tmp/fs"])
       iex> FileSystem.subscribe(pid)
 
-  Get instant notifications on file changes for Mac OS X:
+  Get instant (`latench: 0`) notifications on file changes:
 
       iex> FileSystem.start_link(dirs: ["/path/to/some/files"], latency: 0)
 
-  Named monitor with specified backend:
+  Minitor a directory by a process name:
 
       iex> FileSystem.start_link(backend: :fs_mac, dirs: ["/tmp/fs"], name: :worker)
       iex> FileSystem.subscribe(:worker)
+
   """
   @spec start_link(Keyword.t) :: GenServer.on_start()
   def start_link(options) do
@@ -39,11 +47,13 @@ defmodule FileSystem do
   end
 
   @doc """
-  Register the current process as a subscriber of a file_system worker.
-  The pid you subscribed from will now receive messages like
+  Register the current process as a subscriber of a `file_system` worker.
+
+  The `pid` you subscribed from will now receive messages like:
 
       {:file_event, worker_pid, {file_path, events}}
       {:file_event, worker_pid, :stop}
+
   """
   @spec subscribe(GenServer.server) :: :ok
   def subscribe(pid) do

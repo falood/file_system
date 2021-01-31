@@ -2,24 +2,35 @@ require Logger
 
 defmodule FileSystem.Backends.FSInotify do
   @moduledoc """
+  File system backend for GNU/Linux, FreeBSD, and OpenBSD.
+
   This file is a fork from https://github.com/synrc/fs.
-  FileSystem backend for linux, freebsd and openbsd, a GenServer receive data from Port, parse event
-  and send it to the worker process.
-  Need `inotify-tools` installed to use this backend.
 
   ## Backend Options
 
-    * `:recursive` (bool, default: true), monitor directories and their contents recursively
+    * `:recursive` (bool, default: true), monitor directories and their contents recursively.
 
   ## Executable File Path
 
-  The default behaivour to find executable file is finding `inotifywait` from `$PATH`, there're two ways to custom it, useful when run `:file_system` with escript.
+  Useful when running `:file_system` with escript.
 
-    * config with `config.exs`
-      `config :file_system, :fs_inotify, executable_file: "YOUR_EXECUTABLE_FILE_PATH"`
+  The default listener executable file is found through finding `inotifywait` from
+  `$PATH`.
 
-    * config with `FILESYSTEM_FSINOTIFY_EXECUTABLE_FILE` os environment
-      FILESYSTEM_FSINOTIFY_EXECUTABLE_FILE=YOUR_EXECUTABLE_FILE_PATH
+  Two ways to customize the executable file path:
+
+    * Module config with `config.exs`:
+
+      ```elixir
+      config :file_system, :fs_inotify,
+        executable_file: "YOUR_EXECUTABLE_FILE_PATH"`
+      ```
+
+    * System environment variable:
+
+      ```
+      export FILESYSTEM_FSINOTIFY_EXECUTABLE_FILE="YOUR_EXECUTABLE_FILE_PATH"`
+      ```
   """
 
   use GenServer
