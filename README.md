@@ -15,10 +15,16 @@ An Elixir file change watcher wrapper based on
 - GNU/Linux, FreeBSD and OpenBSD - [inotify](https://github.com/rvoicilas/inotify-tools/wiki)
 - Windows - [inotify-win](https://github.com/thekid/inotify-win)
 
-On MacOS 10.14, to compile `mac_listener`, run:
+On macOS 10.14, before compiling `mac_listener`, run:
 
 ```console
 open /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10.14.pkg
+```
+
+On macOS Big Sur, before compiling `mac_listener`, run:
+
+```console
+xcode-select --install
 ```
 
 ## Usage
