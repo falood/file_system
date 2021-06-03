@@ -58,7 +58,7 @@ defmodule FileSystem.Mixfile do
       Logger.info("Compiling file system watcher for Mac...")
 
       cmd =
-        "clang -framework CoreFoundation -framework CoreServices -Wno-deprecated-declarations #{
+        "/usr/bin/clang -framework CoreFoundation -framework CoreServices -Wno-deprecated-declarations #{
           source
         } -o #{target}"
 
