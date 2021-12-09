@@ -125,7 +125,7 @@ defmodule FileSystem.Backends.FSInotify do
 
         port = Port.open(
           {:spawn_executable, '/bin/sh'},
-          [:stream, :exit_status, {:line, 16384}, {:args, all_args}, {:cd, System.tmp_dir!()}]
+          [:stream, :exit_status, {:line, 16384}, {:args, all_args}]
         )
 
         Process.link(port)
