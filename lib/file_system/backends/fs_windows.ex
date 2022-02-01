@@ -78,7 +78,7 @@ defmodule FileSystem.Backends.FSWindows do
   defp executable_path(:priv) do
     case :code.priv_dir(:file_system) do
       {:error, _} ->
-        Logger.error "`priv` dir for `:file_system` application is not avalible in current runtime, appoint executable file with `config.exs` or `FILESYSTEM_FSWINDOWS_EXECUTABLE_FILE` env."
+        Logger.error "`priv` dir for `:file_system` application is not available in current runtime, appoint executable file with `config.exs` or `FILESYSTEM_FSWINDOWS_EXECUTABLE_FILE` env."
         nil
       dir when is_list(dir) ->
         Path.join(dir, @default_exec_file)
