@@ -125,7 +125,7 @@ defmodule FileSystem.Backends.FSInotify do
 
         port = Port.open(
           {:spawn_executable, '/bin/sh'},
-          [:stream, :exit_status, {:line, 16384}, {:args, all_args}, {:cd, System.tmp_dir!()}]
+          [:binary, :stream, :exit_status, {:line, 16384}, {:args, all_args}, {:cd, System.tmp_dir!()}]
         )
 
         Process.link(port)
@@ -160,7 +160,7 @@ defmodule FileSystem.Backends.FSInotify do
 
   def parse_line(line) do
     {path, flags} =
-      case line |> to_string |> String.split(@sep_char, trim: true) do
+      case String.split(line, @sep_char, trim: true) do
         [dir, flags, file] -> {Path.join(dir, file), flags}
         [path, flags]      -> {path, flags}
       end

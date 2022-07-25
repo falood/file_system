@@ -34,7 +34,7 @@ defmodule FileSystem.Backends.FSInotifyTest do
   end
 
   describe "port line parse test" do
-    defp to_port_line(list), do: list |> Enum.join(<<1>>) |> to_charlist
+    defp to_port_line(list), do: list |> Enum.join(<<1>>)
 
     test "dir write close" do
       assert {"/one/two/file", [:modified, :closed]} ==
