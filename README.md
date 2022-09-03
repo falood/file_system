@@ -23,10 +23,10 @@ open /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10
 
 ## Usage
 
-Put `:file_system` in the `deps` and `application` part of your `mix.exs`:
+Add `file_system` to the `deps` of your mix.exs
 
 ``` elixir
-defmodule Excellent.Mixfile do
+defmodule MyApp.Mixfile do
   use Mix.Project
 
   def project do
