@@ -79,8 +79,7 @@ defmodule FileSystem.Backends.FSInotify do
       {dirs, rest} ->
         format = ["%w", "%e", "%f"] |> Enum.join(@sep_char) |> to_charlist
         args = [
-          '-e', 'modify', '-e', 'close_write', '-e', 'moved_to', '-e', 'moved_from',
-          '-e', 'create', '-e', 'delete', '-e', 'attrib', '--format', format, '--quiet', '-m', '-r'
+          '--format', format, '--quiet', '-m', '-r'
           | dirs |> Enum.map(&Path.absname/1) |> Enum.map(&to_charlist/1)
         ]
         parse_options(rest, args)
@@ -98,6 +97,30 @@ defmodule FileSystem.Backends.FSInotify do
     Logger.error "unknown value `#{inspect value}` for recursive, ignore"
     parse_options(t, result)
   end
+  defp parse_options([{:events, [:modified | et]} | t], result) do
+    parse_options([{:events, et} | t], ['-e', 'modify', '-e', 'close_write'] ++ result)
+  end
+  defp parse_options([{:events, [:moved_to | et]} | t], result) do
+    parse_options([{:events, et} | t], ['-e', 'moved_to'] ++ result)
+  end
+  defp parse_options([{:events, [:moved_from | et]} | t], result) do
+    parse_options([{:events, et} | t], ['-e', 'moved_from'] ++ result)
+  end
+  defp parse_options([{:events, [:created | et]} | t], result) do
+    parse_options([{:events, et} | t], ['-e', 'create'] ++ result)
+  end
+  defp parse_options([{:events, [:deleted | et]} | t], result) do
+    parse_options([{:events, et} | t], ['-e', 'delete'] ++ result)
+  end
+  defp parse_options([{:events, [:attribute | et]} | t], result) do
+    parse_options([{:events, et} | t], ['-e', 'attrib'] ++ result)
+  end
+  defp parse_options([{:events, [:closed | et]} | t], result) do
+    parse_options([{:events, et} | t], ['-e', 'close'] ++ result)
+  end
+  defp parse_options([{:events, []} | t], result) do
+    parse_options(t, result)
+  end
   defp parse_options([h | t], result) do
     Logger.error "unknown option `#{inspect h}`, ignore"
     parse_options(t, result)
@@ -109,6 +132,7 @@ defmodule FileSystem.Backends.FSInotify do
 
   def init(args) do
     {worker_pid, rest} = Keyword.pop(args, :worker_pid)
+    rest = Keyword.merge([events: [:modified, :moved_to, :moved_from, :created, :deleted, :attribute]], rest)
 
     case parse_options(rest) do
       {:ok, port_args} ->
