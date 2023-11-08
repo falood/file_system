@@ -61,9 +61,7 @@ defmodule FileSystem.Mixfile do
       ldflags = System.get_env("LDFLAGS", "")
 
       cmd =
-        "clang #{cflags} #{ldflags} -framework CoreFoundation -framework CoreServices -Wno-deprecated-declarations #{
-          source
-        } -o #{target}"
+        "clang #{cflags} #{ldflags} -framework CoreFoundation -framework CoreServices -Wno-deprecated-declarations #{source} -o #{target}"
 
       if Mix.shell().cmd(cmd) > 0 do
         Logger.error(

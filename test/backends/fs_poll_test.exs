@@ -7,7 +7,7 @@ defmodule FileSystem.Backends.FSPollTest do
 
   @stale %{
     "modified" => @mtime1,
-    "deleted" => @mtime1,
+    "deleted" => @mtime1
   }
 
   @fresh %{

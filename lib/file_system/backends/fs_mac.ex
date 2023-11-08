@@ -57,10 +57,11 @@ defmodule FileSystem.Backends.FSMac do
 
   def bootstrap do
     exec_file = executable_path()
+
     if not is_nil(exec_file) and File.exists?(exec_file) do
       :ok
     else
-      Logger.error "Can't find executable `mac_listener`"
+      Logger.error("Can't find executable `mac_listener`")
       {:error, :fs_mac_bootstrap_error}
     end
   end
@@ -70,14 +71,33 @@ defmodule FileSystem.Backends.FSMac do
   end
 
   def known_events do
-    [ :mustscansubdirs, :userdropped, :kerneldropped, :eventidswrapped, :historydone,
-      :rootchanged, :mount, :unmount, :created, :removed, :inodemetamod, :renamed, :modified,
-      :finderinfomod, :changeowner, :xattrmod, :isfile, :isdir, :issymlink, :ownevent,
+    [
+      :mustscansubdirs,
+      :userdropped,
+      :kerneldropped,
+      :eventidswrapped,
+      :historydone,
+      :rootchanged,
+      :mount,
+      :unmount,
+      :created,
+      :removed,
+      :inodemetamod,
+      :renamed,
+      :modified,
+      :finderinfomod,
+      :changeowner,
+      :xattrmod,
+      :isfile,
+      :isdir,
+      :issymlink,
+      :ownevent
     ]
   end
 
   defp executable_path do
-    executable_path(:system_env) || executable_path(:config) || executable_path(:system_path) || executable_path(:priv)
+    executable_path(:system_env) || executable_path(:config) || executable_path(:system_path) ||
+      executable_path(:priv)
   end
 
   defp executable_path(:config) do
@@ -95,8 +115,12 @@ defmodule FileSystem.Backends.FSMac do
   defp executable_path(:priv) do
     case :code.priv_dir(:file_system) do
       {:error, _} ->
-        Logger.error "`priv` dir for `:file_system` application is not available in current runtime, appoint executable file with `config.exs` or `FILESYSTEM_FSMAC_EXECUTABLE_FILE` env."
+        Logger.error(
+          "`priv` dir for `:file_system` application is not available in current runtime, appoint executable file with `config.exs` or `FILESYSTEM_FSMAC_EXECUTABLE_FILE` env."
+        )
+
         nil
+
       dir when is_list(dir) ->
         Path.join(dir, @default_exec_file)
     end
@@ -105,47 +129,57 @@ defmodule FileSystem.Backends.FSMac do
   def parse_options(options) do
     case Keyword.pop(options, :dirs) do
       {nil, _} ->
-        Logger.error "required argument `dirs` is missing"
+        Logger.error("required argument `dirs` is missing")
         {:error, :missing_dirs_argument}
+
       {dirs, rest} ->
-        args = ['-F' | dirs |> Enum.map(&Path.absname/1) |> Enum.map(&to_charlist/1)]
+        args = [~c"-F" | dirs |> Enum.map(&Path.absname/1) |> Enum.map(&to_charlist/1)]
         parse_options(rest, args)
     end
   end
 
   defp parse_options([], result), do: {:ok, result}
+
   defp parse_options([{:latency, latency} | t], result) do
     result =
       if is_float(latency) or is_integer(latency) do
-        ['--latency=#{latency / 1}' | result]
+        [~c"--latency=#{latency / 1}" | result]
       else
-        Logger.error "latency should be integer or float, got `#{inspect latency}, ignore"
+        Logger.error("latency should be integer or float, got `#{inspect(latency)}, ignore")
         result
       end
+
     parse_options(t, result)
   end
+
   defp parse_options([{:no_defer, true} | t], result) do
-    parse_options(t, ['--no-defer' | result])
+    parse_options(t, [~c"--no-defer" | result])
   end
+
   defp parse_options([{:no_defer, false} | t], result) do
     parse_options(t, result)
   end
+
   defp parse_options([{:no_defer, value} | t], result) do
-    Logger.error "unknown value `#{inspect value}` for no_defer, ignore"
+    Logger.error("unknown value `#{inspect(value)}` for no_defer, ignore")
     parse_options(t, result)
   end
+
   defp parse_options([{:with_root, true} | t], result) do
-    parse_options(t, ['--with-root' | result])
+    parse_options(t, [~c"--with-root" | result])
   end
+
   defp parse_options([{:with_root, false} | t], result) do
     parse_options(t, result)
   end
+
   defp parse_options([{:with_root, value} | t], result) do
-    Logger.error "unknown value `#{inspect value}` for with_root, ignore"
+    Logger.error("unknown value `#{inspect(value)}` for with_root, ignore")
     parse_options(t, result)
   end
+
   defp parse_options([h | t], result) do
-    Logger.error "unknown option `#{inspect h}`, ignore"
+    Logger.error("unknown option `#{inspect(h)}`, ignore")
     parse_options(t, result)
   end
 
@@ -155,32 +189,36 @@ defmodule FileSystem.Backends.FSMac do
 
   def init(args) do
     {worker_pid, rest} = Keyword.pop(args, :worker_pid)
+
     case parse_options(rest) do
       {:ok, port_args} ->
-        port = Port.open(
-          {:spawn_executable, to_charlist(executable_path())},
-          [:stream, :exit_status, {:line, 16384}, {:args, port_args}, {:cd, System.tmp_dir!()}]
-        )
+        port =
+          Port.open(
+            {:spawn_executable, to_charlist(executable_path())},
+            [:stream, :exit_status, {:line, 16384}, {:args, port_args}, {:cd, System.tmp_dir!()}]
+          )
+
         Process.link(port)
         Process.flag(:trap_exit, true)
         {:ok, %{port: port, worker_pid: worker_pid}}
+
       {:error, _} ->
         :ignore
     end
   end
 
-  def handle_info({port, {:data, {:eol, line}}}, %{port: port}=state) do
+  def handle_info({port, {:data, {:eol, line}}}, %{port: port} = state) do
     {file_path, events} = line |> parse_line
     send(state.worker_pid, {:backend_file_event, self(), {file_path, events}})
     {:noreply, state}
   end
 
-  def handle_info({port, {:exit_status, _}}, %{port: port}=state) do
+  def handle_info({port, {:exit_status, _}}, %{port: port} = state) do
     send(state.worker_pid, {:backend_file_event, self(), :stop})
     {:stop, :normal, state}
   end
 
-  def handle_info({:EXIT, port, _reason}, %{port: port}=state) do
+  def handle_info({:EXIT, port, _reason}, %{port: port} = state) do
     send(state.worker_pid, {:backend_file_event, self(), :stop})
     {:stop, :normal, state}
   end
@@ -191,7 +229,8 @@ defmodule FileSystem.Backends.FSMac do
 
   def parse_line(line) do
     [_, _, events, path] = line |> to_string |> String.split(["\t", "="], parts: 4)
-    {path, events |> String.split(["[", ",", "]"], trim: true) |> Enum.map(&String.to_existing_atom/1)}
-  end
 
+    {path,
+     events |> String.split(["[", ",", "]"], trim: true) |> Enum.map(&String.to_existing_atom/1)}
+  end
 end
