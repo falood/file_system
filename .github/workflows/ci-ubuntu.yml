@@ -26,21 +26,12 @@ jobs:
       - name: Install inotify-tools
         run: sudo apt-get update && sudo apt-get install -y inotify-tools
 
-      - uses: actions/checkout@v3
-
       - uses: erlef/setup-beam@v1
         with:
           otp-version: ${{matrix.pair.otp}}
           elixir-version: ${{matrix.pair.elixir}}
 
-      - uses: actions/cache@v3
-        with:
-          path: |
-            deps
-            _build
-          key: ${{ runner.os }}-mix-${{matrix.pair.elixir}}-${{matrix.pair.otp}}-${{ hashFiles('**/mix.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-mix-
+      - uses: actions/checkout@v3
 
       - run: mix deps.get
 
