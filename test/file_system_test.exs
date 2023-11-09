@@ -5,12 +5,11 @@ defmodule FileSystemTest do
 
   test "file event api" do
     tmp_dir = System.cmd("mktemp", ["-d"]) |> elem(0) |> String.trim()
-    IO.inspect(tmp_dir, label: "tmp dir")
     {:ok, pid} = FileSystem.start_link(dirs: [tmp_dir])
     FileSystem.subscribe(pid)
 
     :timer.sleep(200)
-    File.touch("#{tmp_dir}/a")
+    File.write!("#{tmp_dir}/hello", "world")
     assert_receive {:file_event, ^pid, {_path, _events}}, 5000
 
     new_subscriber =
