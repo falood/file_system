@@ -1,4 +1,4 @@
-defmodule FileSystem.Mixfile do
+defmodule FileSystem.MixProject do
   use Mix.Project
 
   @source_url "https://github.com/falood/file_system"
@@ -12,20 +12,21 @@ defmodule FileSystem.Mixfile do
       deps: deps(),
       description: description(),
       package: package(),
+      consolidate_protocols: Mix.env() != :test,
       compilers: [:file_system | Mix.compilers()],
       aliases: ["compile.file_system": &file_system/1],
       docs: [
         extras: ["README.md"],
         main: "readme",
         source_url: @source_url,
-        source_ref: @version
+        source_ref: "v#{@version}"
       ]
     ]
   end
 
   def application do
     [
-      applications: [:logger]
+      extra_applications: [:logger]
     ]
   end
 
@@ -78,7 +79,7 @@ defmodule FileSystem.Mixfile do
   end
 
   defp package do
-    [
+    %{
       maintainers: ["Xiangrong Hao", "Max Veytsman"],
       files: [
         "lib",
@@ -94,6 +95,6 @@ defmodule FileSystem.Mixfile do
       ],
       licenses: ["Apache-2.0"],
       links: %{"GitHub" => @source_url}
-    ]
+    }
   end
 end
