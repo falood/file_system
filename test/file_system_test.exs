@@ -5,6 +5,7 @@ defmodule FileSystemTest do
 
   test "file event api" do
     tmp_dir = System.cmd("mktemp", ["-d"]) |> elem(0) |> String.trim()
+    IO.inspect(tmp_dir, label: "tmp dir")
     {:ok, pid} = FileSystem.start_link(dirs: [tmp_dir])
     FileSystem.subscribe(pid)
 
