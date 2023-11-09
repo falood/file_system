@@ -150,6 +150,7 @@ defmodule FileSystem.Backends.FSWindows do
 
     case parse_options(rest) do
       {:ok, port_args} ->
+        IO.inspect port_args
         port =
           Port.open(
             {:spawn_executable, to_charlist(executable_path())},
