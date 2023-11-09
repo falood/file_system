@@ -2,6 +2,8 @@ defmodule FileSystem.Backends.FSMacTest do
   use ExUnit.Case, async: true
   import FileSystem.Backends.FSMac
 
+  @moduletag os_macos: true
+
   describe "options parse test" do
     test "without :dirs" do
       assert {:error, _} = parse_options([])

@@ -1,0 +1,38 @@
+name: CI (Macos)
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: macos-latest
+    env:
+      MIX_ENV: test
+    strategy:
+      fail-fast: false
+    steps:
+      - name: Set up Homebrew
+        id: set-up-homebrew
+        uses: Homebrew/actions/setup-homebrew@master
+
+      - name: Install Elixir
+        env:
+          HOMEBREW_NO_AUTO_UPDATE: 1
+        run: brew install elixir
+
+      - uses: actions/checkout@v3
+
+      - run: mix deps.get
+
+      - run: mix format --check-formatted
+
+      - run: mix deps.unlock --check-unused
+
+      - run: mix deps.compile
+
+      - run: mix compile --warnings-as-errors
+
+      - run: mix test --only os_macos

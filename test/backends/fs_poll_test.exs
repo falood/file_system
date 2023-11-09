@@ -2,6 +2,8 @@ defmodule FileSystem.Backends.FSPollTest do
   use ExUnit.Case, async: true
   import FileSystem.Backends.FSPoll
 
+  @moduletag os_linux: true, os_macos: true, os_windows: true
+
   @mtime1 {{2017, 11, 13}, {10, 14, 00}}
   @mtime2 {{2017, 11, 13}, {10, 15, 00}}
 
