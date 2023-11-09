@@ -57,10 +57,11 @@ defmodule FileSystem.Mixfile do
     if Mix.Utils.stale?(Path.wildcard(source), [target]) do
       Logger.info("Compiling file system watcher for Mac...")
 
+      cflags = System.get_env("CFLAGS", "")
+      ldflags = System.get_env("LDFLAGS", "")
+
       cmd =
-        "clang -framework CoreFoundation -framework CoreServices -Wno-deprecated-declarations #{
-          source
-        } -o #{target}"
+        "clang #{cflags} #{ldflags} -framework CoreFoundation -framework CoreServices -Wno-deprecated-declarations #{source} -o #{target}"
 
       if Mix.shell().cmd(cmd) > 0 do
         Logger.error(
