@@ -162,7 +162,7 @@ defmodule FileSystem.Backends.FSInotify do
               :stream,
               :exit_status,
               {:line, 16384},
-              {:args, all_args},
+              {:args, all_args}
             ]
           )
 
