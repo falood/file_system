@@ -5,6 +5,9 @@
 [![Total Download](https://img.shields.io/hexpm/dt/file_system.svg)](https://hex.pm/packages/file_system)
 [![License](https://img.shields.io/hexpm/l/file_system.svg)](https://github.com/falood/file_system/blob/master/LICENSE)
 [![Last Updated](https://img.shields.io/github/last-commit/falood/file_system.svg)](https://github.com/falood/file_system/commits/master)
+[![CI Linux](https://github.com/falood/file_system/actions/workflows/ci-linux.yml/badge.svg)](https://github.com/falood/file_system/actions)
+[![CI MacOS](https://github.com/falood/file_system/actions/workflows/ci-macos.yml/badge.svg)](https://github.com/falood/file_system/actions)
+[![CI Windows](https://github.com/falood/file_system/actions/workflows/ci-windows.yml/badge.svg)](https://github.com/falood/file_system/actions)
 
 An Elixir file change watcher wrapper based on
 [FS](https://github.com/synrc/fs), the native file system listener.
