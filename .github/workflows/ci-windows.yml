@@ -21,7 +21,6 @@ jobs:
           - pair:
               elixir: 1.15.7
               otp: 26.1
-            lint: lint
 
     steps:
       - uses: erlef/setup-beam@v1
@@ -33,15 +32,8 @@ jobs:
 
       - run: mix deps.get
 
-      - run: mix format --check-formatted
-        if: ${{ matrix.lint }}
-
-      - run: mix deps.unlock --check-unused
-        if: ${{ matrix.lint }}
-
       - run: mix deps.compile
 
-      - run: mix compile --warnings-as-errors
-        if: ${{ matrix.lint }}
+      - run: mix compile
 
       - run: mix test --only os_windows
