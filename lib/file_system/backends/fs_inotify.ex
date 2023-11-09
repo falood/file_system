@@ -163,7 +163,6 @@ defmodule FileSystem.Backends.FSInotify do
               :exit_status,
               {:line, 16384},
               {:args, all_args},
-              {:cd, System.tmp_dir!()}
             ]
           )
 
