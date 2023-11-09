@@ -113,16 +113,3 @@ Here is an example to get instant notifications on file changes for MacOS:
 ```elixir
 FileSystem.start_link(dirs: ["/path/to/some/files"], latency: 0, watch_root: true)
 ```
-
-## License
-
-Copyright (C) 2016 Xiangrong Hao
-
-Everyone is permitted to copy and distribute verbatim or modified
-copies of this license document, and changing it is allowed as long
-as the name is changed.
-
-           DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
-  TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
-
- 0. You just DO WHAT THE FUCK YOU WANT TO.
