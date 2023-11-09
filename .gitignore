@@ -26,6 +26,6 @@ file_system-*.tar
 /tmp
 
 # Misc
-/priv/mac_listener
+/priv/mac_listener*
 /priv/kqueue
 mix.lock

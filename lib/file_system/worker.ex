@@ -20,7 +20,9 @@ defmodule FileSystem.Worker do
          {:ok, backend_pid} <- backend.start_link([{:worker_pid, self()} | rest]) do
       {:ok, %{backend_pid: backend_pid, subscribers: %{}}}
     else
-      _ -> :ignore
+      any ->
+        IO.inspect(any)
+        :ignore
     end
   end
 
