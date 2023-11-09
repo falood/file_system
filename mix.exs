@@ -92,7 +92,7 @@ defmodule FileSystem.Mixfile do
         "c_src/mac/main.c",
         "priv/inotifywait.exe"
       ],
-      licenses: ["WTFPL"],
+      licenses: ["Apache-2.0"],
       links: %{"GitHub" => @source_url}
     ]
   end
