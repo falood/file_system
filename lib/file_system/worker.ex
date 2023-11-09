@@ -1,3 +1,5 @@
+require Logger
+
 defmodule FileSystem.Worker do
   @moduledoc """
   FileSystem Worker Process with the backend GenServer, receive events from Port Process
@@ -20,8 +22,8 @@ defmodule FileSystem.Worker do
          {:ok, backend_pid} <- backend.start_link([{:worker_pid, self()} | rest]) do
       {:ok, %{backend_pid: backend_pid, subscribers: %{}}}
     else
-      any ->
-        IO.inspect(any)
+      reason ->
+        Logger.warning("Not able to start file_system worker, reason: #{inspect(reason)}")
         :ignore
     end
   end
