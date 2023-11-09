@@ -24,16 +24,6 @@ jobs:
             lint: lint
 
     steps:
-      - run: git config --global core.autocrlf input
-      - uses: cygwin/cygwin-install-action@master
-
-      - name: Install inotify-win
-        run: |
-          git clone https://github.com/thekid/inotify-win.git
-          cd inotify-win
-          make
-          cp inotifywait.exe /tmp
-
       - uses: erlef/setup-beam@v1
         with:
           otp-version: ${{matrix.pair.otp}}
@@ -55,5 +45,3 @@ jobs:
         if: ${{ matrix.lint }}
 
       - run: mix test
-        env:
-          FILESYSTEM_FSMWINDOWS_EXECUTABLE_FILE: "/tmp/inotifywait.exe"
