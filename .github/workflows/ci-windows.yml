@@ -1,0 +1,59 @@
+name: CI (Windows)
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: windows-latest
+    env:
+      MIX_ENV: test
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - pair:
+              elixir: 1.12.3
+              otp: 23.3
+          - pair:
+              elixir: 1.15.7
+              otp: 26.1
+            lint: lint
+
+    steps:
+      - run: git config --global core.autocrlf input
+      - uses: cygwin/cygwin-install-action@master
+
+      - name: Install inotify-win
+        run: |
+          git clone https://github.com/thekid/inotify-win.git
+          cd inotify-win
+          make
+          cp inotifywait.exe /tmp
+
+      - uses: erlef/setup-beam@v1
+        with:
+          otp-version: ${{matrix.pair.otp}}
+          elixir-version: ${{matrix.pair.elixir}}
+
+      - uses: actions/checkout@v3
+
+      - run: mix deps.get
+
+      - run: mix format --check-formatted
+        if: ${{ matrix.lint }}
+
+      - run: mix deps.unlock --check-unused
+        if: ${{ matrix.lint }}
+
+      - run: mix deps.compile
+
+      - run: mix compile --warnings-as-errors
+        if: ${{ matrix.lint }}
+
+      - run: mix test
+        env:
+          FILESYSTEM_FSMWINDOWS_EXECUTABLE_FILE: "/tmp/inotifywait.exe"
