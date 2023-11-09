@@ -38,7 +38,7 @@ defmodule MyApp.Mixfile do
 
   defp deps do
     [
-      { :file_system, "~> 0.2", only: :test },
+      {:file_system, "~> 1.0", only: :test},
     ]
   end
   ...

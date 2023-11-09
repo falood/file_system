@@ -2,7 +2,7 @@ defmodule FileSystem.Mixfile do
   use Mix.Project
 
   @source_url "https://github.com/falood/file_system"
-  @version "0.2.10"
+  @version "1.0.0"
 
   def project do
     [
