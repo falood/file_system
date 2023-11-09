@@ -101,14 +101,6 @@ defmodule FileSystem.Backends.FSWindows do
         format = ["%w", "%e", "%f"] |> Enum.join(@sep_char) |> to_charlist
 
         args = [
-          ~c"-e",
-          ~c"create",
-          ~c"-e",
-          ~c"modify",
-          ~c"-e",
-          ~c"delete",
-          ~c"-e",
-          ~c"move",
           ~c"--format",
           format,
           ~c"--quiet",
@@ -150,7 +142,6 @@ defmodule FileSystem.Backends.FSWindows do
 
     case parse_options(rest) do
       {:ok, port_args} ->
-        IO.inspect port_args
         port =
           Port.open(
             {:spawn_executable, to_charlist(executable_path())},

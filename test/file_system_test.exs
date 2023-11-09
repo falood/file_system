@@ -8,7 +8,7 @@ defmodule FileSystemTest do
     {:ok, pid} = FileSystem.start_link(dirs: [tmp_dir])
     FileSystem.subscribe(pid)
 
-    :timer.sleep(200)
+    :timer.sleep(500)
     File.touch("#{tmp_dir}/a")
     assert_receive {:file_event, ^pid, {_path, _events}}, 5000
 
