@@ -19,7 +19,7 @@ jobs:
         uses: Homebrew/actions/setup-homebrew@master
 
       - name: Install Elixir
-        run: sudo brew install erlang elixir
+        run: brew install elixir
 
       - uses: actions/checkout@v3
 
