@@ -17,7 +17,7 @@ defmodule FileSystem do
       backends: `:fs_mac`, `:fs_inotify`, and `:fs_windows`.
 
     * `:name` (atom, optional), the `name` of the worker process to subscribe
-      to the file system listerner. Alternative to using `pid` of the worker
+      to the file system listener. Alternative to using `pid` of the worker
       process.
 
     * Additional backend implementation options. See backend module documents
