@@ -101,6 +101,14 @@ defmodule FileSystem.Backends.FSWindows do
         format = ["%w", "%e", "%f"] |> Enum.join(@sep_char) |> to_charlist
 
         args = [
+          ~c"-e",
+          ~c"create",
+          ~c"-e",
+          ~c"modify",
+          ~c"-e",
+          ~c"delete",
+          ~c"-e",
+          ~c"move",
           ~c"--format",
           format,
           ~c"--quiet",

@@ -9,7 +9,7 @@ defmodule FileSystemTest do
     FileSystem.subscribe(pid)
 
     :timer.sleep(200)
-    File.write!("#{tmp_dir}/hello", "world")
+    File.touch("#{tmp_dir}/a")
     assert_receive {:file_event, ^pid, {_path, _events}}, 5000
 
     new_subscriber =
