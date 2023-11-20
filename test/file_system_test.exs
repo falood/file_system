@@ -4,7 +4,8 @@ defmodule FileSystemTest do
   @moduletag os_linux: true, os_macos: true, os_windows: true
 
   test "file event api" do
-    tmp_dir = System.cmd("mktemp", ["-d"]) |> elem(0) |> String.trim()
+    tmp_dir = System.cmd("mktemp", ["-d"]) |> elem(0) |> String.trim() |> IO.inspect
+    File.stat(tmp_dir) |> IO.inspect
     {:ok, pid} = FileSystem.start_link(dirs: [tmp_dir])
     FileSystem.subscribe(pid)
 
