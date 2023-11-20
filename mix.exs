@@ -8,7 +8,7 @@ defmodule FileSystem.MixProject do
     [
       app: :file_system,
       version: @version,
-      elixir: "~> 1.3",
+      elixir: "~> 1.11",
       deps: deps(),
       description: description(),
       package: package(),

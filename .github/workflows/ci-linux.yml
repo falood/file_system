@@ -16,8 +16,8 @@ jobs:
       matrix:
         include:
           - pair:
-              elixir: 1.12.3
-              otp: 23.3
+              elixir: 1.11.4
+              otp: 22.3
           - pair:
               elixir: 1.15.7
               otp: 26.1
@@ -31,7 +31,7 @@ jobs:
           otp-version: ${{matrix.pair.otp}}
           elixir-version: ${{matrix.pair.elixir}}
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - run: mix deps.get
 
