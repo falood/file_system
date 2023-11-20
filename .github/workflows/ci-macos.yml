@@ -18,9 +18,10 @@ jobs:
         id: set-up-homebrew
         uses: Homebrew/actions/setup-homebrew@master
 
+      - name: Disable Homebrew Auto Upgrade
+        run: echo 'HOMEBREW_NO_AUTO_UPDATE=1' >> $GITHUB_ENV
+
       - name: Install Elixir
-        env:
-          HOMEBREW_NO_AUTO_UPDATE: 1
         run: brew install elixir
 
       - uses: actions/checkout@v3
