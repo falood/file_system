@@ -36,6 +36,7 @@ defmodule FileSystem.Backend do
       {:unix, :darwin} -> :fs_mac
       {:unix, :linux} -> :fs_inotify
       {:unix, :freebsd} -> :fs_inotify
+      {:unix, :dragonfly} -> :fs_inotify
       {:unix, :openbsd} -> :fs_inotify
       {:win32, :nt} -> :fs_windows
       system -> {:unsupported_system, system}

@@ -15,7 +15,7 @@ An Elixir file change watcher wrapper based on
 ## System Support
 
 - MacOS - [fsevent](https://github.com/thibaudgg/rb-fsevent)
-- GNU/Linux, FreeBSD and OpenBSD - [inotify](https://github.com/rvoicilas/inotify-tools/wiki)
+- GNU/Linux, FreeBSD, DragonFly and OpenBSD - [inotify](https://github.com/rvoicilas/inotify-tools/wiki)
 - Windows - [inotify-win](https://github.com/thekid/inotify-win)
 
 On MacOS 10.14, to compile `mac_listener`, run:
