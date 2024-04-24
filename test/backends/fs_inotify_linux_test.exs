@@ -2,7 +2,7 @@ defmodule FileSystem.Backends.FSInotifyLinuxTest do
   use ExUnit.Case, async: true
   import FileSystem.Backends.FSInotify
 
-  @moduletag os_inux: true
+  @moduletag os_linux: true
 
   describe "options parse test" do
     test "supported options" do
