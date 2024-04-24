@@ -22,7 +22,14 @@ defmodule FileSystem.Backends.FSPoll do
   def bootstrap, do: :ok
 
   def supported_systems do
-    [{:unix, :linux}, {:unix, :freebsd}, {:unix, :openbsd}, {:unix, :darwin}, {:win32, :nt}]
+    [
+      {:unix, :linux},
+      {:unix, :freebsd},
+      {:unix, :dragonfly},
+      {:unix, :openbsd},
+      {:unix, :darwin},
+      {:win32, :nt}
+    ]
   end
 
   def known_events do

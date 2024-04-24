@@ -2,7 +2,7 @@ defmodule FileSystem.Backends.FSInotifyTest do
   use ExUnit.Case, async: true
   import FileSystem.Backends.FSInotify
 
-  @moduletag os_inux: true, os_windows: true
+  @moduletag os_linux: true, os_windows: true
 
   describe "options parse test" do
     test "without :dirs" do

@@ -2,7 +2,7 @@ require Logger
 
 defmodule FileSystem.Backends.FSInotify do
   @moduledoc """
-  File system backend for GNU/Linux, FreeBSD, and OpenBSD.
+  File system backend for GNU/Linux, FreeBSD, DragonFly and OpenBSD.
 
   This file is a fork from https://github.com/synrc/fs.
 
@@ -52,7 +52,7 @@ defmodule FileSystem.Backends.FSInotify do
   end
 
   def supported_systems do
-    [{:unix, :linux}, {:unix, :freebsd}, {:unix, :openbsd}]
+    [{:unix, :linux}, {:unix, :freebsd}, {:unix, :dragonfly}, {:unix, :openbsd}]
   end
 
   def known_events do
@@ -148,6 +148,9 @@ defmodule FileSystem.Backends.FSInotify do
         all_args =
           case :os.type() do
             {:unix, :freebsd} ->
+              bash_args ++ [~c"--"] ++ port_args
+
+            {:unix, :dragonfly} ->
               bash_args ++ [~c"--"] ++ port_args
 
             _ ->
