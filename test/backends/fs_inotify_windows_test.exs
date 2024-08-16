@@ -58,6 +58,7 @@ defmodule FileSystem.Backends.FSInotifyWindowsTest do
       assert tmp_dir |> to_string() |> String.ends_with?("/tmp")
     end
 
+    @tag capture_log: true
     test "ignore unsupported options" do
       assert {:ok,
               [

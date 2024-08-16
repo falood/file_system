@@ -5,6 +5,7 @@ defmodule FileSystem.Backends.FSInotifyLinuxTest do
   @moduletag os_linux: true
 
   describe "options parse test" do
+    @tag capture_log: true
     test "supported options" do
       assert {:ok,
               [
@@ -56,6 +57,7 @@ defmodule FileSystem.Backends.FSInotifyLinuxTest do
                parse_options(dirs: ["/tmp"], recursive: false)
     end
 
+    @tag capture_log: true
     test "ignore unsupported options" do
       assert {:ok,
               [

@@ -5,6 +5,7 @@ defmodule FileSystem.Backends.FSMacTest do
   @moduletag os_macos: true
 
   describe "options parse test" do
+    @tag capture_log: true
     test "without :dirs" do
       assert {:error, _} = parse_options([])
       assert {:error, _} = parse_options(latency: 1)
