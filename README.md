@@ -24,6 +24,8 @@ On MacOS 10.14, to compile `mac_listener`, run:
 open /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10.14.pkg
 ```
 
+On newer versions this file doesn't exist. But it still should work just fine as long as you have xcode installed.
+
 ## Usage
 
 Add `file_system` to the `deps` of your mix.exs
