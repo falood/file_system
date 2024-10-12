@@ -35,7 +35,7 @@ defmodule FileSystem do
 
       iex> FileSystem.start_link(dirs: ["/path/to/some/files"], latency: 0)
 
-  Minitor a directory by a process name:
+  Monitor a directory by a process name:
 
       iex> FileSystem.start_link(backend: :fs_mac, dirs: ["/tmp/fs"], name: :worker)
       iex> FileSystem.subscribe(:worker)
