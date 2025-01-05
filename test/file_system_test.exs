@@ -4,8 +4,9 @@ defmodule FileSystemTest do
   @moduletag os_linux: true, os_macos: true, os_windows: true
 
   test "file event api" do
-    tmp_dir = System.cmd("mktemp", ["-d"]) |> elem(0) |> String.trim()
-    :ok = File.mkdir_p(tmp_dir)
+    tmp_dir = mktemp_d!()
+    on_exit(fn -> File.rm_rf!(tmp_dir) end)
+
     {:ok, pid} = FileSystem.start_link(dirs: [tmp_dir])
     FileSystem.subscribe(pid)
 
@@ -34,7 +35,12 @@ defmodule FileSystemTest do
     |> Enum.each(&Port.close/1)
 
     assert_receive {:file_event, ^pid, :stop}, 5000
+  end
 
-    File.rm_rf!(tmp_dir)
+  defp mktemp_d!() do
+    name = for _ <- 1..10, into: "", do: <<Enum.random(~c'0123456789abcdef')>>
+    path = Path.join([System.tmp_dir!(), name])
+    File.mkdir_p!(path)
+    path
   end
 end
