@@ -7,7 +7,7 @@ defmodule FileSystemTest do
     tmp_dir = mktemp_d!()
     on_exit(fn -> File.rm_rf!(tmp_dir) end)
 
-    {:ok, pid} = FileSystem.start_link(dirs: [tmp_dir])
+    {:ok, pid} = FileSystem.start_link(dirs: [tmp_dir], watch_root: true)
     FileSystem.subscribe(pid)
 
     :timer.sleep(200)

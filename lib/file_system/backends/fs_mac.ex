@@ -165,16 +165,16 @@ defmodule FileSystem.Backends.FSMac do
     parse_options(t, result)
   end
 
-  defp parse_options([{:with_root, true} | t], result) do
-    parse_options(t, [~c"--with-root" | result])
+  defp parse_options([{:watch_root, true} | t], result) do
+    parse_options(t, [~c"--watch-root" | result])
   end
 
-  defp parse_options([{:with_root, false} | t], result) do
+  defp parse_options([{:watch_root, false} | t], result) do
     parse_options(t, result)
   end
 
-  defp parse_options([{:with_root, value} | t], result) do
-    Logger.error("unknown value `#{inspect(value)}` for with_root, ignore")
+  defp parse_options([{:watch_root, value} | t], result) do
+    Logger.error("unknown value `#{inspect(value)}` for watch_root, ignore")
     parse_options(t, result)
   end
 
