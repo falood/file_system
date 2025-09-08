@@ -12,8 +12,8 @@ defmodule FileSystem.Backends.FSMacTest do
     end
 
     test "supported options" do
-      assert {:ok, [~c"--with-root", ~c"--no-defer", ~c"--latency=0.0", ~c"-F", ~c"/tmp"]} ==
-               parse_options(dirs: ["/tmp"], latency: 0, no_defer: true, with_root: true)
+      assert {:ok, [~c"--watch-root", ~c"--no-defer", ~c"--latency=0.0", ~c"-F", ~c"/tmp"]} ==
+               parse_options(dirs: ["/tmp"], latency: 0, no_defer: true, watch_root: true)
 
       assert {:ok, [~c"--no-defer", ~c"--latency=1.1", ~c"-F", ~c"/tmp1", ~c"/tmp2"]} ==
                parse_options(dirs: ["/tmp1", "/tmp2"], latency: 1.1, no_defer: true)
