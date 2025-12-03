@@ -31,7 +31,7 @@ defmodule FileSystem do
       iex> {:ok, pid} = FileSystem.start_link(dirs: ["/tmp/fs"])
       iex> FileSystem.subscribe(pid)
 
-  Get instant (`latench: 0`) notifications on file changes:
+  Get instant (`latency: 0`) notifications on file changes:
 
       iex> FileSystem.start_link(dirs: ["/path/to/some/files"], latency: 0)
 
