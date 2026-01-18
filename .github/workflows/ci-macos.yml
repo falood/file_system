@@ -24,7 +24,7 @@ jobs:
           HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK: 1
         run: brew install elixir
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - run: mix deps.get
 
