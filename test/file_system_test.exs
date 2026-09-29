@@ -37,6 +37,29 @@ defmodule FileSystemTest do
     assert_receive {:file_event, ^pid, :stop}, 5000
   end
 
+  test "non-ascii path" do
+    tmp_dir = mktemp_d!()
+    on_exit(fn -> File.rm_rf!(tmp_dir) end)
+
+    dir = Path.join(tmp_dir, "wät—ch")
+    File.mkdir_p!(dir)
+
+    {:ok, pid} = FileSystem.start_link(dirs: [dir], watch_root: true)
+    FileSystem.subscribe(pid)
+
+    :timer.sleep(200)
+    File.touch("#{dir}/a")
+    assert_receive {:file_event, ^pid, {path, _events}}, 5000
+
+    # A port opened without `:binary` hands back a list of bytes, and `to_string/1`
+    # over that re-encodes each byte as a codepoint, so every non-ascii byte in the
+    # path is doubled and the path names nothing. Asserting the path *exists*
+    # rather than comparing it to `dir` keeps this about the encoding: macOS may
+    # hand back `/private/var/...` for a `/var/...` directory, and may normalise
+    # the name to NFD, and both are fine.
+    assert File.exists?(path)
+  end
+
   defp mktemp_d!() do
     name = for _ <- 1..10, into: "", do: <<Enum.random(~c'0123456789abcdef')>>
     path = Path.join([System.tmp_dir!(), name])

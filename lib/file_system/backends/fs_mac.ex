@@ -195,7 +195,14 @@ defmodule FileSystem.Backends.FSMac do
         port =
           Port.open(
             {:spawn_executable, to_charlist(executable_path())},
-            [:stream, :exit_status, {:line, 16384}, {:args, port_args}, {:cd, System.tmp_dir!()}]
+            [
+              :binary,
+              :stream,
+              :exit_status,
+              {:line, 16384},
+              {:args, port_args},
+              {:cd, System.tmp_dir!()}
+            ]
           )
 
         Process.link(port)
@@ -228,7 +235,7 @@ defmodule FileSystem.Backends.FSMac do
   end
 
   def parse_line(line) do
-    [_, _, events, path] = line |> to_string |> String.split(["\t", "="], parts: 4)
+    [_, _, events, path] = String.split(line, ["\t", "="], parts: 4)
 
     {path,
      events |> String.split(["[", ",", "]"], trim: true) |> Enum.map(&String.to_existing_atom/1)}

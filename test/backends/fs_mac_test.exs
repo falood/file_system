@@ -28,17 +28,17 @@ defmodule FileSystem.Backends.FSMacTest do
   describe "port line parse test" do
     test "file modified" do
       assert {"/one/two/file", [:inodemetamod, :modified]} ==
-               parse_line(~c"37425557\t0x00011400=[inodemetamod,modified]\t/one/two/file")
+               parse_line("37425557\t0x00011400=[inodemetamod,modified]\t/one/two/file")
     end
 
     test "whitespace in path" do
       assert {"/one two/file", [:inodemetamod, :modified]} ==
-               parse_line(~c"37425557\t0x00011400=[inodemetamod,modified]\t/one two/file")
+               parse_line("37425557\t0x00011400=[inodemetamod,modified]\t/one two/file")
     end
 
     test "equal character in file" do
       assert {"/one two/file=2", [:inodemetamod, :modified]} ==
-               parse_line(~c"37425557\t0x00011400=[inodemetamod,modified]\t/one two/file=2")
+               parse_line("37425557\t0x00011400=[inodemetamod,modified]\t/one two/file=2")
     end
   end
 end

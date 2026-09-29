@@ -145,7 +145,14 @@ defmodule FileSystem.Backends.FSWindows do
         port =
           Port.open(
             {:spawn_executable, to_charlist(executable_path())},
-            [:stream, :exit_status, {:line, 16384}, {:args, port_args}, {:cd, System.tmp_dir!()}]
+            [
+              :binary,
+              :stream,
+              :exit_status,
+              {:line, 16384},
+              {:args, port_args},
+              {:cd, System.tmp_dir!()}
+            ]
           )
 
         Process.link(port)
@@ -179,7 +186,7 @@ defmodule FileSystem.Backends.FSWindows do
 
   def parse_line(line) do
     {path, flags} =
-      case line |> to_string |> String.split(@sep_char, trim: true) do
+      case String.split(line, @sep_char, trim: true) do
         [dir, flags, file] -> {Enum.join([dir, file], "\\"), flags}
         [path, flags] -> {path, flags}
       end
